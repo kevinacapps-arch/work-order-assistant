@@ -37,6 +37,15 @@ status.txt
 photos/
 ```
 
+Human-facing output should go to Apple Notes. The packet files are the backup/source records; techs should not have to dig through Files to copy text.
+
+Recommended Notes folders:
+
+```text
+Work Order Drafts
+Work Order Final Notes
+```
+
 ## Shortcut 1: WO Capture Packet
 
 Purpose: collect field scraps fast and offline.
@@ -240,10 +249,25 @@ Actions:
 
    ```
 
-10. `Text`
+10. `Create Note`
+    Folder: `Work Order Drafts`
+
+    Title:
+    ```text
+    [Packet Folder Name]
+    ```
+
+    Body:
+    ```text
+    [draftNote]
+    ```
+
+    This is the tech-facing note they can open, read, edit, and copy from Apple Notes.
+
+11. `Text`
     Contents: `drafted`
 
-11. `Save File`
+12. `Save File`
     Path:
     ```text
     [Packet Folder]/status.txt
@@ -275,9 +299,27 @@ Actions:
    ```text
    [Packet Folder]/final_note.txt
    ```
-8. `Copy to Clipboard`
+8. `Create Note`
+   Folder: `Work Order Final Notes`
+
+   Title:
+   ```text
+   FINAL - [Packet Folder Name]
+   ```
+
+   Body:
+   ```text
+   [revisedNote]
+   ```
+
+9. `Copy to Clipboard`
    Text: `revisedNote`
+
+10. `Show Result`
+    Text: `revisedNote`
 
 ## Build Notes
 
 The most important Shortcuts habit here is file appending. Do not carry a full-day note as one variable. Every branch writes to the current packet folder, and the processor reads each folder separately.
+
+For users, the finished text lives in Apple Notes. Files are for the shortcut to stay organized; Notes is where the tech reads/copies/edits the output.

@@ -113,6 +113,7 @@ The iPad Shortcuts should not do the hard AI work. They should:
 - append later notes/photos to the chosen packet
 - process packets one at a time through `/api/draft`
 - send corrections through `/api/refine`
+- create Apple Notes for drafts/finals so techs can read, edit, and copy the finished text easily
 
 See `SHORTCUTS.md` for the exact action blueprint.
 
