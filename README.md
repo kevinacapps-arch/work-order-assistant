@@ -21,6 +21,12 @@ The server listens at:
 http://localhost:8787
 ```
 
+Open the browser test page:
+
+```text
+http://localhost:8787/test
+```
+
 ## Endpoints
 
 ### Draft

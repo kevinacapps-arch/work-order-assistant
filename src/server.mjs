@@ -1,5 +1,6 @@
 import http from "node:http";
 import { loadEnvFile } from "./env.mjs";
+import { testPageHtml } from "./testPage.mjs";
 import { batchDraft, draftWorkOrder, refineWorkOrder } from "./workOrderAi.mjs";
 
 loadEnvFile();
@@ -23,6 +24,10 @@ const server = http.createServer(async (req, res) => {
         name: "work-order-assistant",
         endpoints: ["/api/draft", "/api/refine", "/api/batch", "/health"]
       });
+    }
+
+    if (req.method === "GET" && req.url === "/test") {
+      return sendHtml(res, 200, testPageHtml());
     }
 
     if (!req.url?.startsWith("/api/")) {
@@ -112,4 +117,11 @@ function sendJson(res, status, payload) {
   }
 
   res.end(JSON.stringify(payload, null, 2));
+}
+
+function sendHtml(res, status, html) {
+  res.writeHead(status, {
+    "Content-Type": "text/html; charset=utf-8"
+  });
+  res.end(html);
 }

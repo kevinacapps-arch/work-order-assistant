@@ -53,6 +53,14 @@ You should see:
 }
 ```
 
+You can also open the browser test page:
+
+```text
+https://your-service-name.onrender.com/test
+```
+
+Paste `APP_SHARED_SECRET`, click `Send Test`, and confirm the backend returns a draft note.
+
 8. In the iPad Shortcut, use this URL:
 
 ```text
