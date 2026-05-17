@@ -37,6 +37,13 @@ Authorization: Bearer your-shared-secret
 Content-Type: application/json
 ```
 
+Shortcuts can also use this header instead of `Authorization`:
+
+```http
+X-App-Secret: your-shared-secret
+Content-Type: application/json
+```
+
 Body:
 
 ```json

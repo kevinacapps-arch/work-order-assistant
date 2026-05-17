@@ -70,8 +70,9 @@ function authorize(req) {
   if (!SHARED_SECRET) return;
 
   const header = req.headers.authorization || "";
+  const shortcutSecret = req.headers["x-app-secret"] || "";
   const expected = `Bearer ${SHARED_SECRET}`;
-  if (header !== expected) {
+  if (header !== expected && shortcutSecret !== SHARED_SECRET) {
     const error = new Error("Unauthorized.");
     error.statusCode = 401;
     throw error;
@@ -106,7 +107,7 @@ function readJson(req) {
 function sendJson(res, status, payload) {
   res.writeHead(status, {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type, X-App-Secret",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Content-Type": "application/json"
   });

@@ -225,6 +225,13 @@ Actions:
    Authorization: Bearer your-shared-secret
    ```
 
+   If Shortcuts is easier with a plain secret header, use this instead:
+
+   ```text
+   Content-Type: application/json
+   X-App-Secret: your-shared-secret
+   ```
+
    Request Body: JSON dictionary from step 5
 
 7. Get `draftNote` from response dictionary.
