@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: work-order-assistant
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: APP_SHARED_SECRET
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.4-mini
+      - key: OPENAI_REASONING_EFFORT
+        value: low
+      - key: MAX_SOURCE_CHARS
+        value: "12000"
+      - key: MAX_FIELD_NOTES_CHARS
+        value: "12000"
+      - key: MAX_OCR_CHARS
+        value: "12000"
+      - key: MAX_LABOR_CHARS
+        value: "5000"
+      - key: MAX_FOLLOW_UP_CHARS
+        value: "5000"
