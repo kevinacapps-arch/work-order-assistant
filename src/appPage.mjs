@@ -315,6 +315,21 @@ export function appPageHtml() {
       color: var(--warn);
     }
 
+    .access-note {
+      margin: 10px 0 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(155, 61, 24, 0.24);
+      border-radius: 6px;
+      color: var(--warn);
+      background: rgba(155, 61, 24, 0.08);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .access-note.hidden {
+      display: none;
+    }
+
     .revision {
       margin-top: 14px;
     }
@@ -447,6 +462,7 @@ export function appPageHtml() {
         <div class="revision">
           <label for="correction">Revision</label>
           <textarea id="correction" placeholder="Too formal. Make it shorter. Do not say performed."></textarea>
+          <div class="access-note hidden" id="access-note">Enter access code to generate or revise notes.</div>
           <div class="actions" style="margin-top: 8px;">
             <button id="revise-note" class="secondary">Revise</button>
             <button id="save-final">Mark Final</button>
@@ -478,7 +494,8 @@ export function appPageHtml() {
       reviseNote: document.getElementById("revise-note"),
       saveFinal: document.getElementById("save-final"),
       note: document.getElementById("note"),
-      correction: document.getElementById("correction")
+      correction: document.getElementById("correction"),
+      accessNote: document.getElementById("access-note")
     };
 
     for (const id of fields) {
@@ -493,9 +510,15 @@ export function appPageHtml() {
     }
 
     els.secret.value = localStorage.getItem(secretKey) || "";
+    els.secret.addEventListener("input", () => {
+      renderFields();
+      if (hasSecret()) setStatus("");
+    });
+
     els.saveSecret.addEventListener("click", () => {
       localStorage.setItem(secretKey, els.secret.value.trim());
-      setStatus("Secret saved on this device.");
+      renderFields();
+      setStatus(hasSecret() ? "Access code saved on this device." : "Enter access code before saving.", !hasSecret());
     });
 
     els.newJob.addEventListener("click", () => {
@@ -559,6 +582,7 @@ export function appPageHtml() {
     els.makeNote.addEventListener("click", async () => {
       const job = requireJob();
       if (!job) return;
+      if (!requireSecret()) return;
       await withBusy(els.makeNote, async () => {
         const json = await postJson("/api/draft", packetFromJob(job));
         job.draftNote = json.draftNote || "";
@@ -573,6 +597,7 @@ export function appPageHtml() {
     els.reviseNote.addEventListener("click", async () => {
       const job = requireJob();
       if (!job) return;
+      if (!requireSecret()) return;
       if (!job.draftNote && !job.finalNote) {
         setStatus("Make a draft first.", true);
         return;
@@ -664,10 +689,11 @@ export function appPageHtml() {
         els[id].disabled = !job;
       }
       els.addUpdate.disabled = !job;
-      els.makeNote.disabled = !job;
+      els.makeNote.disabled = !job || !hasSecret();
       els.reviseNote.disabled = !job;
       els.copyNote.disabled = !job;
       els.saveFinal.disabled = !job;
+      els.accessNote.classList.toggle("hidden", hasSecret());
     }
 
     function renderOutput() {
@@ -685,6 +711,18 @@ export function appPageHtml() {
       const job = activeJob();
       if (!job) setStatus("Start a job first.", true);
       return job;
+    }
+
+    function hasSecret() {
+      return Boolean((els.secret.value.trim() || localStorage.getItem(secretKey) || "").trim());
+    }
+
+    function requireSecret() {
+      if (hasSecret()) return true;
+      setStatus("Enter access code to generate notes.", true);
+      els.accessNote.classList.remove("hidden");
+      els.secret.focus();
+      return false;
     }
 
     function packetFromJob(job) {
