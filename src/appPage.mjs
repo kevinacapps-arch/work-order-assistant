@@ -8,20 +8,20 @@ export function appPageHtml() {
   <style>
     :root {
       color-scheme: light;
-      --bg: #e9ece2;
-      --panel: #fffdf7;
-      --panel-2: #edf5f0;
-      --ink: #16231d;
-      --muted: #617168;
-      --line: #c4d0c8;
-      --line-strong: #92a79a;
-      --accent: #096b56;
-      --accent-2: #1f5c88;
-      --accent-3: #bd5b2f;
-      --warn: #9b3d18;
-      --paper: #fffaf0;
-      --shadow: 0 24px 60px rgba(22, 35, 29, 0.14);
-      --tight-shadow: 0 10px 24px rgba(22, 35, 29, 0.1);
+      --bg: #f4f2eb;
+      --panel: rgba(255, 252, 243, 0.94);
+      --panel-2: #fff8dc;
+      --ink: #211f1a;
+      --muted: #746f62;
+      --line: #ddd4bd;
+      --line-strong: #c7b98e;
+      --accent: #f2b900;
+      --accent-2: #d99700;
+      --accent-3: #8f6a00;
+      --warn: #a64a1b;
+      --paper: #fffdf5;
+      --shadow: 0 24px 70px rgba(64, 54, 31, 0.13);
+      --tight-shadow: 0 10px 24px rgba(64, 54, 31, 0.08);
     }
 
     * {
@@ -33,13 +33,12 @@ export function appPageHtml() {
       min-height: 100vh;
       color: var(--ink);
       background:
-        linear-gradient(118deg, rgba(9, 107, 86, 0.18), transparent 33%),
-        linear-gradient(286deg, rgba(31, 92, 136, 0.16), transparent 32%),
-        linear-gradient(18deg, rgba(189, 91, 47, 0.12), transparent 44%),
-        repeating-linear-gradient(90deg, rgba(22, 35, 29, 0.035), rgba(22, 35, 29, 0.035) 1px, transparent 1px, transparent 56px),
-        repeating-linear-gradient(0deg, rgba(22, 35, 29, 0.035), rgba(22, 35, 29, 0.035) 1px, transparent 1px, transparent 30px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent 260px),
+        radial-gradient(circle at 22% 0%, rgba(242, 185, 0, 0.18), transparent 32%),
+        radial-gradient(circle at 92% 8%, rgba(217, 151, 0, 0.12), transparent 28%),
+        repeating-linear-gradient(0deg, rgba(129, 113, 75, 0.035), rgba(129, 113, 75, 0.035) 1px, transparent 1px, transparent 34px),
         var(--bg);
-      font-family: "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+      font-family: "Aptos", "Segoe UI", sans-serif;
     }
 
     body::before {
@@ -48,7 +47,7 @@ export function appPageHtml() {
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(135deg, transparent 0 42%, rgba(255, 253, 247, 0.46) 42% 44%, transparent 44% 100%);
+        linear-gradient(135deg, transparent 0 42%, rgba(255, 255, 255, 0.42) 42% 44%, transparent 44% 100%);
       mix-blend-mode: soft-light;
     }
 
@@ -57,19 +56,19 @@ export function appPageHtml() {
       grid-template-columns: 1fr auto;
       gap: 18px;
       align-items: center;
-      padding: 18px 22px;
-      border-bottom: 1px solid rgba(146, 167, 154, 0.55);
-      background: rgba(255, 253, 247, 0.88);
-      backdrop-filter: blur(12px);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(221, 212, 189, 0.74);
+      background: rgba(255, 252, 243, 0.84);
+      backdrop-filter: blur(18px) saturate(1.15);
       position: sticky;
       top: 0;
       z-index: 10;
-      box-shadow: 0 8px 22px rgba(22, 35, 29, 0.08);
+      box-shadow: 0 8px 24px rgba(64, 54, 31, 0.08);
     }
 
     h1 {
       margin: 0;
-      font: 900 25px/1.05 "Aptos Display", "Gill Sans", "Segoe UI", sans-serif;
+      font: 800 25px/1.05 "Aptos Display", "Segoe UI", sans-serif;
       letter-spacing: 0;
     }
 
@@ -92,37 +91,86 @@ export function appPageHtml() {
       justify-content: end;
     }
 
-    .secret {
-      width: min(320px, 42vw);
-      height: 42px;
+    .access-shell {
+      min-height: calc(100vh - 78px);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .access-card {
+      width: min(560px, 100%);
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.97), rgba(246, 244, 235, 0.96));
+      border: 1px solid rgba(146, 167, 154, 0.68);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+
+    .access-card h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .access-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .access-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .access-row input {
+      height: 46px;
+    }
+
+    .access-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
     }
 
     main {
       display: grid;
-      grid-template-columns: 280px minmax(390px, 1.05fr) minmax(390px, 0.95fr);
-      gap: 16px;
-      padding: 16px;
+      grid-template-columns: 290px minmax(390px, 0.95fr) minmax(420px, 1.05fr);
+      gap: 14px;
+      padding: 14px;
       min-height: calc(100vh - 75px);
     }
 
     aside,
     section {
       background: var(--panel);
-      border: 1px solid rgba(146, 167, 154, 0.62);
-      border-radius: 8px;
+      border: 1px solid rgba(221, 212, 189, 0.78);
+      border-radius: 12px;
       box-shadow: var(--shadow);
       min-width: 0;
       overflow: hidden;
       position: relative;
-    }
-
-    aside::before,
-    section::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
     }
 
     aside {
@@ -136,16 +184,15 @@ export function appPageHtml() {
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 14px;
+      padding: 15px;
       border-bottom: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(237, 245, 240, 0.95), rgba(255, 253, 247, 0.94)),
-        linear-gradient(90deg, rgba(9, 107, 86, 0.08), transparent);
+        linear-gradient(180deg, rgba(255, 252, 243, 0.98), rgba(249, 244, 225, 0.94));
     }
 
     h2 {
       margin: 0;
-      font: 900 15px/1.2 "Aptos Display", "Gill Sans", "Segoe UI", sans-serif;
+      font: 800 15px/1.2 "Aptos Display", "Segoe UI", sans-serif;
       letter-spacing: 0;
     }
 
@@ -163,7 +210,7 @@ export function appPageHtml() {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 12px;
+      padding: 11px;
       overflow: auto;
     }
 
@@ -171,11 +218,11 @@ export function appPageHtml() {
       width: 100%;
       border: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(246, 244, 235, 0.96));
+        linear-gradient(180deg, rgba(255, 252, 243, 0.96), rgba(252, 247, 229, 0.96));
       color: var(--ink);
       text-align: left;
-      border-radius: 6px;
-      padding: 11px;
+      border-radius: 10px;
+      padding: 12px;
       cursor: pointer;
       box-shadow: var(--tight-shadow);
       transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
@@ -187,7 +234,7 @@ export function appPageHtml() {
     }
 
     .job.active {
-      border-color: var(--accent);
+      border-color: var(--accent-2);
       background: var(--panel-2);
       box-shadow: inset 4px 0 0 var(--accent), var(--tight-shadow);
     }
@@ -225,7 +272,7 @@ export function appPageHtml() {
       border-radius: 999px;
       padding: 0 8px;
       background: rgba(9, 107, 86, 0.1);
-      color: var(--accent);
+      color: #6f5300;
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
@@ -233,7 +280,7 @@ export function appPageHtml() {
 
     .status-pill.final {
       background: rgba(31, 92, 136, 0.12);
-      color: var(--accent-2);
+      color: #2b5d83;
     }
 
     .status-pill.revised {
@@ -279,11 +326,11 @@ export function appPageHtml() {
     textarea {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 10px;
       background: rgba(255, 254, 250, 0.92);
       color: var(--ink);
       padding: 11px 12px;
-      font: 15px/1.38 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+      font: 15px/1.38 "Aptos", "Segoe UI", sans-serif;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
       transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
     }
@@ -314,27 +361,27 @@ export function appPageHtml() {
       padding: 14px 16px 16px;
       border-top: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 253, 247, 0.86), rgba(239, 244, 235, 0.95));
+        linear-gradient(180deg, rgba(255, 252, 243, 0.86), rgba(249, 244, 225, 0.95));
     }
 
     select {
       height: 40px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 10px;
       background: #fffefa;
       color: var(--ink);
       padding: 0 10px;
-      font: 14px/1.2 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+      font: 14px/1.2 "Aptos", "Segoe UI", sans-serif;
     }
 
     button {
       min-height: 38px;
       border: 1px solid var(--line-strong);
-      border-radius: 6px;
+      border-radius: 10px;
       background: #fffefa;
       color: var(--ink);
       padding: 0 12px;
-      font: 900 13px/1.1 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+      font: 800 13px/1.1 "Aptos", "Segoe UI", sans-serif;
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 4px 12px rgba(22, 35, 29, 0.08);
@@ -348,13 +395,13 @@ export function appPageHtml() {
 
     button.primary {
       border-color: var(--accent);
-      background: linear-gradient(180deg, #127b64, var(--accent));
-      color: #fff;
+      background: linear-gradient(180deg, #ffd95a, var(--accent));
+      color: #332600;
     }
 
     button.secondary {
       border-color: var(--accent-2);
-      color: var(--accent-2);
+      color: #2b5d83;
     }
 
     button.danger {
@@ -376,14 +423,13 @@ export function appPageHtml() {
     .note {
       min-height: 290px;
       white-space: pre-wrap;
-      border: 1px solid #d8c9aa;
-      border-radius: 6px;
+      border: 1px solid #e0d2aa;
+      border-radius: 12px;
       background:
-        linear-gradient(90deg, rgba(189, 91, 47, 0.2) 0 2px, transparent 2px 100%),
-        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(31, 92, 136, 0.12) 32px),
+        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(118, 99, 47, 0.1) 32px),
         var(--paper);
-      padding: 18px 18px 18px 24px;
-      font: 16px/1.45 Georgia, "Times New Roman", serif;
+      padding: 20px 22px;
+      font: 17px/1.55 Georgia, "Times New Roman", serif;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(68, 49, 28, 0.08);
     }
 
@@ -397,7 +443,7 @@ export function appPageHtml() {
     .labor-chip {
       min-height: 34px;
       padding: 0 10px;
-      background: #f8f6ef;
+      background: #fff6d3;
       font-weight: 700;
       color: #314138;
       box-shadow: none;
@@ -421,7 +467,7 @@ export function appPageHtml() {
       margin: 10px 0 0;
       padding: 10px 12px;
       border: 1px solid rgba(155, 61, 24, 0.24);
-      border-radius: 6px;
+      border-radius: 10px;
       color: var(--warn);
       background: rgba(155, 61, 24, 0.08);
       font-size: 13px;
@@ -455,8 +501,8 @@ export function appPageHtml() {
         justify-content: stretch;
       }
 
-      .secret {
-        width: 100%;
+      .access-row {
+        grid-template-columns: 1fr;
       }
 
       main {
@@ -474,16 +520,32 @@ export function appPageHtml() {
   <header>
     <div class="brand">
       <h1>Foreman Notes</h1>
-      <span>Messy job facts in. AppFolio note out.</span>
+      <span>Messy job facts in. Clean work note out.</span>
     </div>
     <div class="topbar">
-      <input class="secret" id="secret" type="password" autocomplete="off" placeholder="APP_SHARED_SECRET">
-      <button id="save-secret">Save Secret</button>
       <button id="new-job" class="primary">New Job</button>
     </div>
   </header>
 
-  <main>
+  <div class="access-shell hidden" id="access-shell">
+    <div class="access-card">
+      <h2>Enter Access Code</h2>
+      <p>This keeps the note generator private and protects your API usage. Save it on trusted devices only.</p>
+      <div class="access-row">
+        <div>
+          <label for="access-code">Access Code</label>
+          <input id="access-code" type="password" autocomplete="off" placeholder="Paste access code">
+        </div>
+        <button id="unlock" class="primary">Unlock</button>
+      </div>
+      <div class="access-actions">
+        <span>Code is stored in this browser only.</span>
+        <button id="clear-secret" class="danger">Forget Saved Code</button>
+      </div>
+    </div>
+  </div>
+
+  <main id="workspace">
     <aside>
       <div class="panel-head">
         <div class="panel-title">
@@ -512,7 +574,7 @@ export function appPageHtml() {
 
         <div class="field">
           <label for="sourceText">Original Work Order / Tenant Complaint</label>
-          <textarea id="sourceText" placeholder="Paste the AppFolio work order text or tenant complaint"></textarea>
+          <textarea id="sourceText" placeholder="Paste the work order text or tenant complaint"></textarea>
         </div>
 
         <div class="field">
@@ -522,7 +584,7 @@ export function appPageHtml() {
 
         <div class="field">
           <label for="ocrText">Text From Screenshot / Photo</label>
-          <textarea id="ocrText" placeholder="Paste text pulled from a screenshot or photo, like copied AppFolio details"></textarea>
+          <textarea id="ocrText" placeholder="Paste text pulled from a screenshot or photo, like copied work order details"></textarea>
           <div class="hint">OCR just means text pulled out of an image. Leave this blank if you do not have any.</div>
         </div>
 
@@ -591,8 +653,11 @@ export function appPageHtml() {
     let activeId = jobs[0] ? jobs[0].id : null;
 
     const els = {
-      secret: document.getElementById("secret"),
-      saveSecret: document.getElementById("save-secret"),
+      accessShell: document.getElementById("access-shell"),
+      accessCode: document.getElementById("access-code"),
+      unlock: document.getElementById("unlock"),
+      clearSecret: document.getElementById("clear-secret"),
+      workspace: document.getElementById("workspace"),
       newJob: document.getElementById("new-job"),
       clearDone: document.getElementById("clear-done"),
       jobList: document.getElementById("job-list"),
@@ -620,16 +685,27 @@ export function appPageHtml() {
       });
     }
 
-    els.secret.value = localStorage.getItem(secretKey) || "";
-    els.secret.addEventListener("input", () => {
+    els.accessCode.value = localStorage.getItem(secretKey) || "";
+
+    els.accessCode.addEventListener("input", () => {
       renderFields();
       if (hasSecret()) setStatus("");
     });
 
-    els.saveSecret.addEventListener("click", () => {
-      localStorage.setItem(secretKey, els.secret.value.trim());
-      renderFields();
-      setStatus(hasSecret() ? "Access code saved on this device." : "Enter access code before saving.", !hasSecret());
+    els.accessCode.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        saveAccessCode();
+      }
+    });
+
+    els.unlock.addEventListener("click", saveAccessCode);
+
+    els.clearSecret.addEventListener("click", () => {
+      localStorage.removeItem(secretKey);
+      els.accessCode.value = "";
+      render();
+      els.accessCode.focus();
     });
 
     els.newJob.addEventListener("click", () => {
@@ -763,9 +839,18 @@ export function appPageHtml() {
 
     function render() {
       if (!activeId && jobs[0]) activeId = jobs[0].id;
+      renderAccessGate();
       renderJobs();
       renderFields();
       renderOutput();
+    }
+
+    function renderAccessGate() {
+      const unlocked = hasSecret();
+      els.accessShell.classList.toggle("hidden", unlocked);
+      els.workspace.classList.toggle("hidden", !unlocked);
+      els.newJob.disabled = !unlocked;
+      if (!unlocked) setStatus("");
     }
 
     function renderJobs() {
@@ -828,15 +913,30 @@ export function appPageHtml() {
     }
 
     function hasSecret() {
-      return Boolean((els.secret.value.trim() || localStorage.getItem(secretKey) || "").trim());
+      return Boolean((els.accessCode.value.trim() || localStorage.getItem(secretKey) || "").trim());
     }
 
     function requireSecret() {
       if (hasSecret()) return true;
+      renderAccessGate();
       setStatus("Enter access code to generate notes.", true);
       els.accessNote.classList.remove("hidden");
-      els.secret.focus();
+      els.accessCode.focus();
       return false;
+    }
+
+    function saveAccessCode() {
+      const value = els.accessCode.value.trim();
+      if (!value) {
+        localStorage.removeItem(secretKey);
+        els.accessCode.value = "";
+        render();
+        return;
+      }
+      localStorage.setItem(secretKey, value);
+      els.accessCode.value = value;
+      render();
+      setStatus("Access code saved on this device.");
     }
 
     function packetFromJob(job) {
@@ -852,7 +952,7 @@ export function appPageHtml() {
     }
 
     async function postJson(url, body) {
-      const secret = els.secret.value.trim() || localStorage.getItem(secretKey) || "";
+      const secret = els.accessCode.value.trim() || localStorage.getItem(secretKey) || "";
       const response = await fetch(url, {
         method: "POST",
         headers: {
