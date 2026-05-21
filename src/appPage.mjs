@@ -8,18 +8,20 @@ export function appPageHtml() {
   <style>
     :root {
       color-scheme: light;
-      --bg: #eef0ea;
-      --panel: #fffdf8;
-      --panel-2: #edf5f1;
-      --ink: #18231e;
-      --muted: #637168;
-      --line: #c7d1ca;
-      --line-strong: #9fb0a6;
-      --accent: #0b6d58;
-      --accent-2: #245b8a;
-      --accent-3: #b7552c;
+      --bg: #e9ece2;
+      --panel: #fffdf7;
+      --panel-2: #edf5f0;
+      --ink: #16231d;
+      --muted: #617168;
+      --line: #c4d0c8;
+      --line-strong: #92a79a;
+      --accent: #096b56;
+      --accent-2: #1f5c88;
+      --accent-3: #bd5b2f;
       --warn: #9b3d18;
-      --shadow: 0 18px 45px rgba(24, 35, 30, 0.12);
+      --paper: #fffaf0;
+      --shadow: 0 24px 60px rgba(22, 35, 29, 0.14);
+      --tight-shadow: 0 10px 24px rgba(22, 35, 29, 0.1);
     }
 
     * {
@@ -31,12 +33,23 @@ export function appPageHtml() {
       min-height: 100vh;
       color: var(--ink);
       background:
-        radial-gradient(circle at 12% 8%, rgba(11, 109, 88, 0.16), transparent 28%),
-        radial-gradient(circle at 85% 16%, rgba(36, 91, 138, 0.16), transparent 30%),
-        linear-gradient(135deg, rgba(183, 85, 44, 0.08), transparent 42%),
-        repeating-linear-gradient(0deg, rgba(24, 35, 30, 0.04), rgba(24, 35, 30, 0.04) 1px, transparent 1px, transparent 30px),
+        linear-gradient(118deg, rgba(9, 107, 86, 0.18), transparent 33%),
+        linear-gradient(286deg, rgba(31, 92, 136, 0.16), transparent 32%),
+        linear-gradient(18deg, rgba(189, 91, 47, 0.12), transparent 44%),
+        repeating-linear-gradient(90deg, rgba(22, 35, 29, 0.035), rgba(22, 35, 29, 0.035) 1px, transparent 1px, transparent 56px),
+        repeating-linear-gradient(0deg, rgba(22, 35, 29, 0.035), rgba(22, 35, 29, 0.035) 1px, transparent 1px, transparent 30px),
         var(--bg);
-      font-family: "Aptos", "Segoe UI", sans-serif;
+      font-family: "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, transparent 0 42%, rgba(255, 253, 247, 0.46) 42% 44%, transparent 44% 100%);
+      mix-blend-mode: soft-light;
     }
 
     header {
@@ -45,17 +58,18 @@ export function appPageHtml() {
       gap: 18px;
       align-items: center;
       padding: 18px 22px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 253, 248, 0.86);
+      border-bottom: 1px solid rgba(146, 167, 154, 0.55);
+      background: rgba(255, 253, 247, 0.88);
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 10;
+      box-shadow: 0 8px 22px rgba(22, 35, 29, 0.08);
     }
 
     h1 {
       margin: 0;
-      font: 900 24px/1.1 "Aptos Display", "Segoe UI", sans-serif;
+      font: 900 25px/1.05 "Aptos Display", "Gill Sans", "Segoe UI", sans-serif;
       letter-spacing: 0;
     }
 
@@ -80,25 +94,35 @@ export function appPageHtml() {
 
     .secret {
       width: min(320px, 42vw);
-      height: 38px;
+      height: 42px;
     }
 
     main {
       display: grid;
-      grid-template-columns: 260px minmax(360px, 1fr) minmax(360px, 0.9fr);
-      gap: 14px;
-      padding: 14px;
+      grid-template-columns: 280px minmax(390px, 1.05fr) minmax(390px, 0.95fr);
+      gap: 16px;
+      padding: 16px;
       min-height: calc(100vh - 75px);
     }
 
     aside,
     section {
       background: var(--panel);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(146, 167, 154, 0.62);
       border-radius: 8px;
       box-shadow: var(--shadow);
       min-width: 0;
       overflow: hidden;
+      position: relative;
+    }
+
+    aside::before,
+    section::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
     }
 
     aside {
@@ -114,38 +138,58 @@ export function appPageHtml() {
       gap: 10px;
       padding: 14px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(237, 245, 241, 0.8), rgba(255, 253, 248, 0.92));
+      background:
+        linear-gradient(180deg, rgba(237, 245, 240, 0.95), rgba(255, 253, 247, 0.94)),
+        linear-gradient(90deg, rgba(9, 107, 86, 0.08), transparent);
     }
 
     h2 {
       margin: 0;
-      font: 800 15px/1.2 "Aptos Display", "Segoe UI", sans-serif;
+      font: 900 15px/1.2 "Aptos Display", "Gill Sans", "Segoe UI", sans-serif;
       letter-spacing: 0;
+    }
+
+    .panel-title {
+      min-width: 0;
+    }
+
+    .panel-subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .job-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 10px;
+      padding: 12px;
       overflow: auto;
     }
 
     .job {
       width: 100%;
       border: 1px solid var(--line);
-      background: #fbfaf6;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(246, 244, 235, 0.96));
       color: var(--ink);
       text-align: left;
       border-radius: 6px;
-      padding: 10px;
+      padding: 11px;
       cursor: pointer;
+      box-shadow: var(--tight-shadow);
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .job:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
     }
 
     .job.active {
       border-color: var(--accent);
       background: var(--panel-2);
-      box-shadow: inset 4px 0 0 var(--accent);
+      box-shadow: inset 4px 0 0 var(--accent), var(--tight-shadow);
     }
 
     .job strong {
@@ -157,10 +201,44 @@ export function appPageHtml() {
     }
 
     .job span {
-      display: block;
-      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 7px;
       color: var(--muted);
       font-size: 12px;
+    }
+
+    .job em {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-style: normal;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 0 8px;
+      background: rgba(9, 107, 86, 0.1);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .status-pill.final {
+      background: rgba(31, 92, 136, 0.12);
+      color: var(--accent-2);
+    }
+
+    .status-pill.revised {
+      background: rgba(189, 91, 47, 0.14);
+      color: #85401f;
     }
 
     .content {
@@ -171,7 +249,7 @@ export function appPageHtml() {
 
     .fields,
     .output-body {
-      padding: 14px;
+      padding: 16px;
       overflow: auto;
     }
 
@@ -202,10 +280,21 @@ export function appPageHtml() {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 6px;
-      background: #fffefa;
+      background: rgba(255, 254, 250, 0.92);
       color: var(--ink);
-      padding: 10px 11px;
-      font: 15px/1.38 "Aptos", "Segoe UI", sans-serif;
+      padding: 11px 12px;
+      font: 15px/1.38 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(9, 107, 86, 0.14);
+      background: #fffefa;
     }
 
     textarea {
@@ -214,7 +303,7 @@ export function appPageHtml() {
     }
 
     .field {
-      margin-bottom: 13px;
+      margin-bottom: 14px;
     }
 
     .quick-add {
@@ -222,9 +311,10 @@ export function appPageHtml() {
       grid-template-columns: 150px 1fr auto;
       gap: 8px;
       align-items: end;
-      padding: 14px;
+      padding: 14px 16px 16px;
       border-top: 1px solid var(--line);
-      background: #fbfaf6;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.86), rgba(239, 244, 235, 0.95));
     }
 
     select {
@@ -234,7 +324,7 @@ export function appPageHtml() {
       background: #fffefa;
       color: var(--ink);
       padding: 0 10px;
-      font: 14px/1.2 "Aptos", "Segoe UI", sans-serif;
+      font: 14px/1.2 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
     }
 
     button {
@@ -244,14 +334,21 @@ export function appPageHtml() {
       background: #fffefa;
       color: var(--ink);
       padding: 0 12px;
-      font: 800 13px/1.1 "Aptos", "Segoe UI", sans-serif;
+      font: 900 13px/1.1 "Aptos", "Gill Sans", "Segoe UI", sans-serif;
       cursor: pointer;
       white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(22, 35, 29, 0.08);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(22, 35, 29, 0.12);
     }
 
     button.primary {
       border-color: var(--accent);
-      background: var(--accent);
+      background: linear-gradient(180deg, #127b64, var(--accent));
       color: #fff;
     }
 
@@ -279,11 +376,15 @@ export function appPageHtml() {
     .note {
       min-height: 290px;
       white-space: pre-wrap;
-      border: 1px solid var(--line);
+      border: 1px solid #d8c9aa;
       border-radius: 6px;
-      background: #fffefa;
-      padding: 12px;
+      background:
+        linear-gradient(90deg, rgba(189, 91, 47, 0.2) 0 2px, transparent 2px 100%),
+        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(31, 92, 136, 0.12) 32px),
+        var(--paper);
+      padding: 18px 18px 18px 24px;
       font: 16px/1.45 Georgia, "Times New Roman", serif;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(68, 49, 28, 0.08);
     }
 
     .labor-helper {
@@ -299,6 +400,7 @@ export function appPageHtml() {
       background: #f8f6ef;
       font-weight: 700;
       color: #314138;
+      box-shadow: none;
     }
 
     .empty {
@@ -384,7 +486,10 @@ export function appPageHtml() {
   <main>
     <aside>
       <div class="panel-head">
-        <h2>Jobs</h2>
+        <div class="panel-title">
+          <h2>Jobs</h2>
+          <div class="panel-subtitle">One bucket per work order</div>
+        </div>
         <button id="clear-done" class="danger">Clear</button>
       </div>
       <div class="job-list" id="job-list"></div>
@@ -392,7 +497,10 @@ export function appPageHtml() {
 
     <section class="content">
       <div class="panel-head">
-        <h2>Field Facts</h2>
+        <div class="panel-title">
+          <h2>Field Facts</h2>
+          <div class="panel-subtitle">Raw notes, complaint, labor reason</div>
+        </div>
         <div class="status" id="status"></div>
       </div>
 
@@ -450,7 +558,10 @@ export function appPageHtml() {
 
     <section class="content output">
       <div class="panel-head">
-        <h2>Output</h2>
+        <div class="panel-title">
+          <h2>Output</h2>
+          <div class="panel-subtitle">Draft, revise, copy</div>
+        </div>
         <div class="actions">
           <button id="make-note" class="primary">Make Note</button>
           <button id="copy-note">Copy</button>
@@ -671,9 +782,12 @@ export function appPageHtml() {
       for (const job of jobs) {
         const button = document.createElement("button");
         button.className = "job" + (job.id === activeId ? " active" : "");
-        button.innerHTML = "<strong></strong><span></span>";
+        button.innerHTML = "<strong></strong><span><em></em><small class=\"status-pill\"></small></span>";
         button.querySelector("strong").textContent = job.label || "Untitled job";
-        button.querySelector("span").textContent = job.status + " | " + formatDate(job.createdAt);
+        button.querySelector("em").textContent = formatDate(job.createdAt);
+        const pill = button.querySelector(".status-pill");
+        pill.textContent = job.status;
+        pill.classList.add(job.status);
         button.addEventListener("click", () => {
           activeId = job.id;
           render();
@@ -690,7 +804,7 @@ export function appPageHtml() {
       }
       els.addUpdate.disabled = !job;
       els.makeNote.disabled = !job || !hasSecret();
-      els.reviseNote.disabled = !job;
+      els.reviseNote.disabled = !job || !hasSecret();
       els.copyNote.disabled = !job;
       els.saveFinal.disabled = !job;
       els.accessNote.classList.toggle("hidden", hasSecret());
