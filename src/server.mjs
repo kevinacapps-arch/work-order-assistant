@@ -12,30 +12,36 @@ const SHARED_SECRET = process.env.APP_SHARED_SECRET || "";
 
 const server = http.createServer(async (req, res) => {
   try {
+    const path = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`).pathname;
+
     if (req.method === "OPTIONS") {
       return sendJson(res, 204, null);
     }
 
-    if (req.method === "GET" && req.url === "/health") {
+    if (req.method === "GET" && path === "/health") {
       return sendJson(res, 200, { ok: true });
     }
 
-    if (req.method === "GET" && req.url === "/") {
-      return sendJson(res, 200, {
-        name: "work-order-assistant",
-        endpoints: ["/api/draft", "/api/refine", "/api/batch", "/health"]
-      });
-    }
-
-    if (req.method === "GET" && req.url === "/test") {
-      return sendHtml(res, 200, testPageHtml());
-    }
-
-    if (req.method === "GET" && req.url === "/app") {
+    if (req.method === "GET" && path === "/") {
       return sendHtml(res, 200, appPageHtml());
     }
 
-    if (!req.url?.startsWith("/api/")) {
+    if (req.method === "GET" && path === "/api") {
+      return sendJson(res, 200, {
+        name: "work-order-assistant",
+        endpoints: ["/", "/app", "/test", "/api/draft", "/api/refine", "/api/batch", "/health"]
+      });
+    }
+
+    if (req.method === "GET" && path === "/test") {
+      return sendHtml(res, 200, testPageHtml());
+    }
+
+    if (req.method === "GET" && (path === "/app" || path === "/app/")) {
+      return sendHtml(res, 200, appPageHtml());
+    }
+
+    if (!path.startsWith("/api/")) {
       return sendJson(res, 404, { error: "Not found" });
     }
 
@@ -46,15 +52,15 @@ const server = http.createServer(async (req, res) => {
     authorize(req);
     const body = await readJson(req);
 
-    if (req.url === "/api/draft") {
+    if (path === "/api/draft") {
       return sendJson(res, 200, await draftWorkOrder(body));
     }
 
-    if (req.url === "/api/refine") {
+    if (path === "/api/refine") {
       return sendJson(res, 200, await refineWorkOrder(body));
     }
 
-    if (req.url === "/api/batch") {
+    if (path === "/api/batch") {
       return sendJson(res, 200, await batchDraft(body.packets));
     }
 

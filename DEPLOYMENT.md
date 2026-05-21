@@ -64,6 +64,12 @@ Paste `APP_SHARED_SECRET`, click `Send Test`, and confirm the backend returns a 
 The browser work surface is available at:
 
 ```text
+https://your-service-name.onrender.com
+```
+
+or:
+
+```text
 https://your-service-name.onrender.com/app
 ```
 
