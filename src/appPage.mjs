@@ -4,21 +4,22 @@ export function appPageHtml() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Work Order Notes</title>
+  <title>Foreman Notes</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f1ea;
+      --bg: #eef0ea;
       --panel: #fffdf8;
-      --panel-2: #eef4ef;
-      --ink: #17211c;
-      --muted: #627067;
-      --line: #cbd5ce;
-      --line-strong: #aebcb3;
-      --accent: #0f6a55;
-      --accent-2: #1d4e89;
+      --panel-2: #edf5f1;
+      --ink: #18231e;
+      --muted: #637168;
+      --line: #c7d1ca;
+      --line-strong: #9fb0a6;
+      --accent: #0b6d58;
+      --accent-2: #245b8a;
+      --accent-3: #b7552c;
       --warn: #9b3d18;
-      --shadow: 0 16px 40px rgba(23, 33, 28, 0.1);
+      --shadow: 0 18px 45px rgba(24, 35, 30, 0.12);
     }
 
     * {
@@ -30,9 +31,10 @@ export function appPageHtml() {
       min-height: 100vh;
       color: var(--ink);
       background:
-        linear-gradient(120deg, rgba(15, 106, 85, 0.1), transparent 34%),
-        linear-gradient(290deg, rgba(29, 78, 137, 0.11), transparent 32%),
-        repeating-linear-gradient(0deg, rgba(23, 33, 28, 0.035), rgba(23, 33, 28, 0.035) 1px, transparent 1px, transparent 28px),
+        radial-gradient(circle at 12% 8%, rgba(11, 109, 88, 0.16), transparent 28%),
+        radial-gradient(circle at 85% 16%, rgba(36, 91, 138, 0.16), transparent 30%),
+        linear-gradient(135deg, rgba(183, 85, 44, 0.08), transparent 42%),
+        repeating-linear-gradient(0deg, rgba(24, 35, 30, 0.04), rgba(24, 35, 30, 0.04) 1px, transparent 1px, transparent 30px),
         var(--bg);
       font-family: "Aptos", "Segoe UI", sans-serif;
     }
@@ -53,8 +55,19 @@ export function appPageHtml() {
 
     h1 {
       margin: 0;
-      font: 800 22px/1.1 "Aptos Display", "Segoe UI", sans-serif;
+      font: 900 24px/1.1 "Aptos Display", "Segoe UI", sans-serif;
       letter-spacing: 0;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .topbar {
@@ -85,6 +98,7 @@ export function appPageHtml() {
       border-radius: 8px;
       box-shadow: var(--shadow);
       min-width: 0;
+      overflow: hidden;
     }
 
     aside {
@@ -100,6 +114,7 @@ export function appPageHtml() {
       gap: 10px;
       padding: 14px;
       border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(237, 245, 241, 0.8), rgba(255, 253, 248, 0.92));
     }
 
     h2 {
@@ -130,6 +145,7 @@ export function appPageHtml() {
     .job.active {
       border-color: var(--accent);
       background: var(--panel-2);
+      box-shadow: inset 4px 0 0 var(--accent);
     }
 
     .job strong {
@@ -159,12 +175,26 @@ export function appPageHtml() {
       overflow: auto;
     }
 
+    .section-note {
+      margin: -2px 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
     label {
       display: block;
       margin: 0 0 6px;
       color: #26352d;
       font: 800 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
       text-transform: uppercase;
+    }
+
+    .hint {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
     }
 
     input,
@@ -256,6 +286,21 @@ export function appPageHtml() {
       font: 16px/1.45 Georgia, "Times New Roman", serif;
     }
 
+    .labor-helper {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .labor-chip {
+      min-height: 34px;
+      padding: 0 10px;
+      background: #f8f6ef;
+      font-weight: 700;
+      color: #314138;
+    }
+
     .empty {
       color: var(--muted);
     }
@@ -310,7 +355,10 @@ export function appPageHtml() {
 </head>
 <body>
   <header>
-    <h1>Work Order Notes</h1>
+    <div class="brand">
+      <h1>Foreman Notes</h1>
+      <span>Messy job facts in. AppFolio note out.</span>
+    </div>
     <div class="topbar">
       <input class="secret" id="secret" type="password" autocomplete="off" placeholder="APP_SHARED_SECRET">
       <button id="save-secret">Save Secret</button>
@@ -340,38 +388,45 @@ export function appPageHtml() {
         </div>
 
         <div class="field">
-          <label for="sourceText">Work Order Text</label>
-          <textarea id="sourceText" placeholder="Tenant complaint or copied AppFolio text"></textarea>
+          <label for="sourceText">Original Work Order / Tenant Complaint</label>
+          <textarea id="sourceText" placeholder="Paste the AppFolio work order text or tenant complaint"></textarea>
         </div>
 
         <div class="field">
-          <label for="fieldNotes">Field Notes</label>
-          <textarea id="fieldNotes" placeholder="What you walked into, checked, found, and did"></textarea>
+          <label for="fieldNotes">What Happened Onsite</label>
+          <textarea id="fieldNotes" placeholder="What you walked into, what you checked/found, what you did, and how it ended"></textarea>
         </div>
 
         <div class="field">
-          <label for="ocrText">OCR Text</label>
-          <textarea id="ocrText" placeholder="Screenshot/photo text if you have it"></textarea>
+          <label for="ocrText">Text From Screenshot / Photo</label>
+          <textarea id="ocrText" placeholder="Paste text pulled from a screenshot or photo, like copied AppFolio details"></textarea>
+          <div class="hint">OCR just means text pulled out of an image. Leave this blank if you do not have any.</div>
         </div>
 
         <div class="field">
-          <label for="laborNotes">Labor Context</label>
-          <textarea id="laborNotes" placeholder="Access, troubleshooting, supply run, traffic, vendor delay"></textarea>
+          <label for="laborNotes">Why Did Labor Take What It Took?</label>
+          <textarea id="laborNotes" placeholder="Only add this if time needs explaining: access, troubleshooting, supply run, traffic, weather, vendor delay, tenant delays"></textarea>
+          <div class="labor-helper">
+            <button class="labor-chip" data-labor="Extra time due to tight access.">Tight access</button>
+            <button class="labor-chip" data-labor="Extra time due to troubleshooting before the issue was isolated.">Troubleshooting</button>
+            <button class="labor-chip" data-labor="Extra time due to supply run for material.">Supply run</button>
+            <button class="labor-chip" data-labor="Extra time due to traffic between stops.">Traffic</button>
+          </div>
         </div>
 
         <div class="field">
           <label for="followUp">Follow-Up</label>
-          <textarea id="followUp" placeholder="Practical follow-up or vendor recommendation"></textarea>
+          <textarea id="followUp" placeholder="Vendor needed, part needed, monitor, return trip, or leave blank"></textarea>
         </div>
       </div>
 
       <div class="quick-add">
         <select id="update-type">
-          <option value="fieldNotes">Field note</option>
-          <option value="sourceText">WO text</option>
-          <option value="laborNotes">Labor reason</option>
+          <option value="fieldNotes">Onsite update</option>
+          <option value="sourceText">Complaint text</option>
+          <option value="laborNotes">Labor explanation</option>
           <option value="followUp">Follow-up</option>
-          <option value="ocrText">OCR text</option>
+          <option value="ocrText">Screenshot text</option>
         </select>
         <textarea id="update-text" placeholder="Add a quick update"></textarea>
         <button id="add-update">Add</button>
@@ -488,6 +543,17 @@ export function appPageHtml() {
       saveJobs();
       render();
       setStatus("Update added.");
+    });
+
+    document.querySelectorAll("[data-labor]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const job = requireJob();
+        if (!job) return;
+        job.laborNotes = appendText(job.laborNotes, button.dataset.labor);
+        saveJobs();
+        render();
+        setStatus("Labor reason added.");
+      });
     });
 
     els.makeNote.addEventListener("click", async () => {
