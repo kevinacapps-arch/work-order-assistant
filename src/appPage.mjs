@@ -8,18 +8,18 @@ export function appPageHtml() {
   <style>
     :root {
       color-scheme: dark;
-      --bg: #11100d;
-      --panel: rgba(31, 29, 24, 0.94);
-      --panel-2: #312b1c;
-      --ink: #f4efe3;
-      --muted: #aaa08b;
-      --line: #433d31;
-      --line-strong: #6c614b;
-      --accent: #f2b900;
-      --accent-2: #d99700;
-      --accent-3: #8f6a00;
-      --warn: #ff986e;
-      --paper: #211d15;
+      --bg: #101216;
+      --panel: rgba(28, 31, 37, 0.94);
+      --panel-2: #273244;
+      --ink: #f1f3f7;
+      --muted: #a5adba;
+      --line: #3d4552;
+      --line-strong: #667085;
+      --accent: #6aa6ff;
+      --accent-2: #8fbfff;
+      --accent-3: #c9a66b;
+      --warn: #ff9b73;
+      --paper: #181b21;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
       --tight-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
     }
@@ -33,10 +33,10 @@ export function appPageHtml() {
       min-height: 100vh;
       color: var(--ink);
       background:
-        linear-gradient(180deg, rgba(255, 211, 77, 0.06), transparent 260px),
-        radial-gradient(circle at 22% 0%, rgba(255, 211, 77, 0.16), transparent 32%),
-        radial-gradient(circle at 92% 8%, rgba(224, 170, 34, 0.12), transparent 28%),
-        repeating-linear-gradient(0deg, rgba(255, 211, 77, 0.03), rgba(255, 211, 77, 0.03) 1px, transparent 1px, transparent 34px),
+        linear-gradient(180deg, rgba(106, 166, 255, 0.08), transparent 260px),
+        radial-gradient(circle at 22% 0%, rgba(106, 166, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 92% 8%, rgba(201, 166, 107, 0.1), transparent 28%),
+        repeating-linear-gradient(0deg, rgba(143, 191, 255, 0.026), rgba(143, 191, 255, 0.026) 1px, transparent 1px, transparent 34px),
         var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
@@ -47,7 +47,7 @@ export function appPageHtml() {
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(135deg, transparent 0 42%, rgba(255, 211, 77, 0.09) 42% 44%, transparent 44% 100%);
+        linear-gradient(135deg, transparent 0 42%, rgba(143, 191, 255, 0.08) 42% 44%, transparent 44% 100%);
       mix-blend-mode: screen;
     }
 
@@ -57,8 +57,8 @@ export function appPageHtml() {
       gap: 18px;
       align-items: center;
       padding: 16px 20px;
-      border-bottom: 1px solid rgba(108, 97, 75, 0.72);
-      background: rgba(23, 22, 18, 0.86);
+      border-bottom: 1px solid rgba(102, 112, 133, 0.56);
+      background: rgba(18, 20, 25, 0.86);
       backdrop-filter: blur(18px) saturate(1.15);
       position: sticky;
       top: 0;
@@ -272,7 +272,7 @@ export function appPageHtml() {
       border-radius: 999px;
       padding: 0 8px;
       background: rgba(9, 107, 86, 0.1);
-      color: #ffe089;
+      color: #cfe1ff;
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
@@ -280,7 +280,7 @@ export function appPageHtml() {
 
     .status-pill.final {
       background: rgba(120, 169, 220, 0.14);
-      color: #a8d0ff;
+      color: #bdd8ff;
     }
 
     .status-pill.revised {
@@ -341,7 +341,7 @@ export function appPageHtml() {
     select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(255, 211, 77, 0.16);
+      box-shadow: 0 0 0 3px rgba(106, 166, 255, 0.16);
       background: rgba(18, 17, 14, 0.96);
     }
 
@@ -396,13 +396,13 @@ export function appPageHtml() {
 
     button.primary {
       border-color: var(--accent);
-      background: linear-gradient(180deg, #ffd95a, var(--accent));
-      color: #332600;
+      background: linear-gradient(180deg, #8fbfff, var(--accent));
+      color: #0c1726;
     }
 
     button.secondary {
       border-color: var(--accent-2);
-      color: #a8d0ff;
+      color: #bdd8ff;
     }
 
     button.danger {
@@ -424,10 +424,10 @@ export function appPageHtml() {
     .note {
       min-height: 290px;
       white-space: pre-wrap;
-      border: 1px solid #5e533c;
+      border: 1px solid #465060;
       border-radius: 12px;
       background:
-        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(255, 211, 77, 0.08) 32px),
+        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(143, 191, 255, 0.07) 32px),
         var(--paper);
       padding: 20px 22px;
       font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
@@ -444,9 +444,9 @@ export function appPageHtml() {
     .labor-chip {
       min-height: 34px;
       padding: 0 10px;
-      background: #2d2719;
+      background: #222833;
       font-weight: 700;
-      color: #f4e8bd;
+      color: #d8e6ff;
       box-shadow: none;
     }
 
