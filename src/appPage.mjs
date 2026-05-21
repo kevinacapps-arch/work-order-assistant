@@ -38,7 +38,7 @@ export function appPageHtml() {
         radial-gradient(circle at 92% 8%, rgba(224, 170, 34, 0.12), transparent 28%),
         repeating-linear-gradient(0deg, rgba(255, 211, 77, 0.03), rgba(255, 211, 77, 0.03) 1px, transparent 1px, transparent 34px),
         var(--bg);
-      font-family: "Aptos", "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
 
     body::before {
@@ -68,7 +68,7 @@ export function appPageHtml() {
 
     h1 {
       margin: 0;
-      font: 800 25px/1.05 "Aptos Display", "Segoe UI", sans-serif;
+      font: 700 25px/1.08 -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
       letter-spacing: 0;
     }
 
@@ -192,7 +192,7 @@ export function appPageHtml() {
 
     h2 {
       margin: 0;
-      font: 800 15px/1.2 "Aptos Display", "Segoe UI", sans-serif;
+      font: 700 15px/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       letter-spacing: 0;
     }
 
@@ -311,7 +311,8 @@ export function appPageHtml() {
       display: block;
       margin: 0 0 6px;
       color: #e6ddc8;
-      font: 800 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+      font: 700 11px/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
 
@@ -330,7 +331,7 @@ export function appPageHtml() {
       background: rgba(18, 17, 14, 0.82);
       color: var(--ink);
       padding: 11px 12px;
-      font: 15px/1.38 "Aptos", "Segoe UI", sans-serif;
+      font: 15px/1.38 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
       transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
     }
@@ -371,7 +372,7 @@ export function appPageHtml() {
       background: rgba(18, 17, 14, 0.9);
       color: var(--ink);
       padding: 0 10px;
-      font: 14px/1.2 "Aptos", "Segoe UI", sans-serif;
+      font: 14px/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
 
     button {
@@ -381,7 +382,7 @@ export function appPageHtml() {
       background: rgba(18, 17, 14, 0.9);
       color: var(--ink);
       padding: 0 12px;
-      font: 800 13px/1.1 "Aptos", "Segoe UI", sans-serif;
+      font: 700 13px/1.1 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 4px 12px rgba(22, 35, 29, 0.08);
@@ -429,7 +430,7 @@ export function appPageHtml() {
         repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(255, 211, 77, 0.08) 32px),
         var(--paper);
       padding: 20px 22px;
-      font: 17px/1.55 Georgia, "Times New Roman", serif;
+      font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px rgba(0, 0, 0, 0.22);
     }
 
@@ -583,12 +584,6 @@ export function appPageHtml() {
         </div>
 
         <div class="field">
-          <label for="ocrText">Text From Screenshot / Photo</label>
-          <textarea id="ocrText" placeholder="Paste text pulled from a screenshot or photo, like copied work order details"></textarea>
-          <div class="hint">OCR just means text pulled out of an image. Leave this blank if you do not have any.</div>
-        </div>
-
-        <div class="field">
           <label for="laborNotes">Why Did Labor Take What It Took?</label>
           <textarea id="laborNotes" placeholder="Only add this if time needs explaining: access, troubleshooting, supply run, traffic, weather, vendor delay, tenant delays"></textarea>
           <div class="labor-helper">
@@ -611,7 +606,6 @@ export function appPageHtml() {
           <option value="sourceText">Complaint text</option>
           <option value="laborNotes">Labor explanation</option>
           <option value="followUp">Follow-up</option>
-          <option value="ocrText">Screenshot text</option>
         </select>
         <textarea id="update-text" placeholder="Add a quick update"></textarea>
         <button id="add-update">Add</button>
@@ -648,7 +642,7 @@ export function appPageHtml() {
   <script>
     const storageKey = "wo-ui-jobs-v1";
     const secretKey = "wo-ui-secret-v1";
-    const fields = ["label", "sourceText", "fieldNotes", "ocrText", "laborNotes", "followUp"];
+    const fields = ["label", "sourceText", "fieldNotes", "laborNotes", "followUp"];
     let jobs = loadJobs();
     let activeId = jobs[0] ? jobs[0].id : null;
 
@@ -945,7 +939,7 @@ export function appPageHtml() {
         label: job.label,
         sourceText: job.sourceText,
         fieldNotes: job.fieldNotes,
-        ocrText: job.ocrText,
+        ocrText: "",
         laborNotes: job.laborNotes,
         followUp: job.followUp
       };
