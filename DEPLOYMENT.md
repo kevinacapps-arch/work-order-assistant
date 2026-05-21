@@ -61,6 +61,14 @@ https://your-service-name.onrender.com/test
 
 Paste `APP_SHARED_SECRET`, click `Send Test`, and confirm the backend returns a draft note.
 
+The browser work surface is available at:
+
+```text
+https://your-service-name.onrender.com/app
+```
+
+It stores jobs in that browser's local storage and sends drafts/refinements to the same backend.
+
 8. In the iPad Shortcut, use this URL:
 
 ```text

@@ -27,6 +27,12 @@ Open the browser test page:
 http://localhost:8787/test
 ```
 
+Open the browser work surface:
+
+```text
+http://localhost:8787/app
+```
+
 ## Endpoints
 
 ### Draft

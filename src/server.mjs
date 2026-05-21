@@ -1,4 +1,5 @@
 import http from "node:http";
+import { appPageHtml } from "./appPage.mjs";
 import { loadEnvFile } from "./env.mjs";
 import { testPageHtml } from "./testPage.mjs";
 import { batchDraft, draftWorkOrder, refineWorkOrder } from "./workOrderAi.mjs";
@@ -28,6 +29,10 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && req.url === "/test") {
       return sendHtml(res, 200, testPageHtml());
+    }
+
+    if (req.method === "GET" && req.url === "/app") {
+      return sendHtml(res, 200, appPageHtml());
     }
 
     if (!req.url?.startsWith("/api/")) {
