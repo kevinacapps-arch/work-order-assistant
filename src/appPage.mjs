@@ -18,7 +18,7 @@ export function appPageHtml() {
       --accent: #6aa6ff;
       --accent-2: #8fbfff;
       --accent-3: #c9a66b;
-      --warn: #ff9b73;
+      --warn: #f1c96b;
       --paper: #181b21;
       --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
       --tight-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
@@ -284,8 +284,8 @@ export function appPageHtml() {
     }
 
     .status-pill.revised {
-      background: rgba(255, 152, 110, 0.14);
-      color: #ffb28f;
+      background: rgba(241, 201, 107, 0.14);
+      color: #f5d98c;
     }
 
     .content {
@@ -470,7 +470,7 @@ export function appPageHtml() {
       border: 1px solid rgba(155, 61, 24, 0.24);
       border-radius: 10px;
       color: var(--warn);
-      background: rgba(255, 152, 110, 0.09);
+      background: rgba(241, 201, 107, 0.1);
       font-size: 13px;
       line-height: 1.35;
     }
