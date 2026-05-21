@@ -7,21 +7,21 @@ export function appPageHtml() {
   <title>Foreman Notes</title>
   <style>
     :root {
-      color-scheme: light;
-      --bg: #f4f2eb;
-      --panel: rgba(255, 252, 243, 0.94);
-      --panel-2: #fff8dc;
-      --ink: #211f1a;
-      --muted: #746f62;
-      --line: #ddd4bd;
-      --line-strong: #c7b98e;
+      color-scheme: dark;
+      --bg: #11100d;
+      --panel: rgba(31, 29, 24, 0.94);
+      --panel-2: #312b1c;
+      --ink: #f4efe3;
+      --muted: #aaa08b;
+      --line: #433d31;
+      --line-strong: #6c614b;
       --accent: #f2b900;
       --accent-2: #d99700;
       --accent-3: #8f6a00;
-      --warn: #a64a1b;
-      --paper: #fffdf5;
-      --shadow: 0 24px 70px rgba(64, 54, 31, 0.13);
-      --tight-shadow: 0 10px 24px rgba(64, 54, 31, 0.08);
+      --warn: #ff986e;
+      --paper: #211d15;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      --tight-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
     }
 
     * {
@@ -33,10 +33,10 @@ export function appPageHtml() {
       min-height: 100vh;
       color: var(--ink);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent 260px),
-        radial-gradient(circle at 22% 0%, rgba(242, 185, 0, 0.18), transparent 32%),
-        radial-gradient(circle at 92% 8%, rgba(217, 151, 0, 0.12), transparent 28%),
-        repeating-linear-gradient(0deg, rgba(129, 113, 75, 0.035), rgba(129, 113, 75, 0.035) 1px, transparent 1px, transparent 34px),
+        linear-gradient(180deg, rgba(255, 211, 77, 0.06), transparent 260px),
+        radial-gradient(circle at 22% 0%, rgba(255, 211, 77, 0.16), transparent 32%),
+        radial-gradient(circle at 92% 8%, rgba(224, 170, 34, 0.12), transparent 28%),
+        repeating-linear-gradient(0deg, rgba(255, 211, 77, 0.03), rgba(255, 211, 77, 0.03) 1px, transparent 1px, transparent 34px),
         var(--bg);
       font-family: "Aptos", "Segoe UI", sans-serif;
     }
@@ -47,8 +47,8 @@ export function appPageHtml() {
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(135deg, transparent 0 42%, rgba(255, 255, 255, 0.42) 42% 44%, transparent 44% 100%);
-      mix-blend-mode: soft-light;
+        linear-gradient(135deg, transparent 0 42%, rgba(255, 211, 77, 0.09) 42% 44%, transparent 44% 100%);
+      mix-blend-mode: screen;
     }
 
     header {
@@ -57,13 +57,13 @@ export function appPageHtml() {
       gap: 18px;
       align-items: center;
       padding: 16px 20px;
-      border-bottom: 1px solid rgba(221, 212, 189, 0.74);
-      background: rgba(255, 252, 243, 0.84);
+      border-bottom: 1px solid rgba(108, 97, 75, 0.72);
+      background: rgba(23, 22, 18, 0.86);
       backdrop-filter: blur(18px) saturate(1.15);
       position: sticky;
       top: 0;
       z-index: 10;
-      box-shadow: 0 8px 24px rgba(64, 54, 31, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
     }
 
     h1 {
@@ -101,8 +101,8 @@ export function appPageHtml() {
     .access-card {
       width: min(560px, 100%);
       background:
-        linear-gradient(180deg, rgba(255, 253, 247, 0.97), rgba(246, 244, 235, 0.96));
-      border: 1px solid rgba(146, 167, 154, 0.68);
+        linear-gradient(180deg, rgba(38, 35, 28, 0.98), rgba(26, 24, 20, 0.98));
+      border: 1px solid rgba(108, 97, 75, 0.78);
       border-radius: 8px;
       box-shadow: var(--shadow);
       padding: 26px;
@@ -165,7 +165,7 @@ export function appPageHtml() {
     aside,
     section {
       background: var(--panel);
-      border: 1px solid rgba(221, 212, 189, 0.78);
+      border: 1px solid rgba(108, 97, 75, 0.76);
       border-radius: 12px;
       box-shadow: var(--shadow);
       min-width: 0;
@@ -187,7 +187,7 @@ export function appPageHtml() {
       padding: 15px;
       border-bottom: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 252, 243, 0.98), rgba(249, 244, 225, 0.94));
+        linear-gradient(180deg, rgba(38, 35, 28, 0.98), rgba(30, 28, 23, 0.94));
     }
 
     h2 {
@@ -218,7 +218,7 @@ export function appPageHtml() {
       width: 100%;
       border: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 252, 243, 0.96), rgba(252, 247, 229, 0.96));
+        linear-gradient(180deg, rgba(36, 33, 27, 0.96), rgba(30, 28, 22, 0.96));
       color: var(--ink);
       text-align: left;
       border-radius: 10px;
@@ -272,20 +272,20 @@ export function appPageHtml() {
       border-radius: 999px;
       padding: 0 8px;
       background: rgba(9, 107, 86, 0.1);
-      color: #6f5300;
+      color: #ffe089;
       font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
     }
 
     .status-pill.final {
-      background: rgba(31, 92, 136, 0.12);
-      color: #2b5d83;
+      background: rgba(120, 169, 220, 0.14);
+      color: #a8d0ff;
     }
 
     .status-pill.revised {
-      background: rgba(189, 91, 47, 0.14);
-      color: #85401f;
+      background: rgba(255, 152, 110, 0.14);
+      color: #ffb28f;
     }
 
     .content {
@@ -310,7 +310,7 @@ export function appPageHtml() {
     label {
       display: block;
       margin: 0 0 6px;
-      color: #26352d;
+      color: #e6ddc8;
       font: 800 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
       text-transform: uppercase;
     }
@@ -327,11 +327,11 @@ export function appPageHtml() {
       width: 100%;
       border: 1px solid var(--line);
       border-radius: 10px;
-      background: rgba(255, 254, 250, 0.92);
+      background: rgba(18, 17, 14, 0.82);
       color: var(--ink);
       padding: 11px 12px;
       font: 15px/1.38 "Aptos", "Segoe UI", sans-serif;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
       transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
     }
 
@@ -340,8 +340,8 @@ export function appPageHtml() {
     select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(9, 107, 86, 0.14);
-      background: #fffefa;
+      box-shadow: 0 0 0 3px rgba(255, 211, 77, 0.16);
+      background: rgba(18, 17, 14, 0.96);
     }
 
     textarea {
@@ -361,14 +361,14 @@ export function appPageHtml() {
       padding: 14px 16px 16px;
       border-top: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 252, 243, 0.86), rgba(249, 244, 225, 0.95));
+        linear-gradient(180deg, rgba(34, 31, 25, 0.86), rgba(26, 24, 20, 0.95));
     }
 
     select {
       height: 40px;
       border: 1px solid var(--line);
       border-radius: 10px;
-      background: #fffefa;
+      background: rgba(18, 17, 14, 0.9);
       color: var(--ink);
       padding: 0 10px;
       font: 14px/1.2 "Aptos", "Segoe UI", sans-serif;
@@ -378,7 +378,7 @@ export function appPageHtml() {
       min-height: 38px;
       border: 1px solid var(--line-strong);
       border-radius: 10px;
-      background: #fffefa;
+      background: rgba(18, 17, 14, 0.9);
       color: var(--ink);
       padding: 0 12px;
       font: 800 13px/1.1 "Aptos", "Segoe UI", sans-serif;
@@ -401,7 +401,7 @@ export function appPageHtml() {
 
     button.secondary {
       border-color: var(--accent-2);
-      color: #2b5d83;
+      color: #a8d0ff;
     }
 
     button.danger {
@@ -423,14 +423,14 @@ export function appPageHtml() {
     .note {
       min-height: 290px;
       white-space: pre-wrap;
-      border: 1px solid #e0d2aa;
+      border: 1px solid #5e533c;
       border-radius: 12px;
       background:
-        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(118, 99, 47, 0.1) 32px),
+        repeating-linear-gradient(0deg, var(--paper), var(--paper) 31px, rgba(255, 211, 77, 0.08) 32px),
         var(--paper);
       padding: 20px 22px;
       font: 17px/1.55 Georgia, "Times New Roman", serif;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(68, 49, 28, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px rgba(0, 0, 0, 0.22);
     }
 
     .labor-helper {
@@ -443,9 +443,9 @@ export function appPageHtml() {
     .labor-chip {
       min-height: 34px;
       padding: 0 10px;
-      background: #fff6d3;
+      background: #2d2719;
       font-weight: 700;
-      color: #314138;
+      color: #f4e8bd;
       box-shadow: none;
     }
 
@@ -469,7 +469,7 @@ export function appPageHtml() {
       border: 1px solid rgba(155, 61, 24, 0.24);
       border-radius: 10px;
       color: var(--warn);
-      background: rgba(155, 61, 24, 0.08);
+      background: rgba(255, 152, 110, 0.09);
       font-size: 13px;
       line-height: 1.35;
     }
