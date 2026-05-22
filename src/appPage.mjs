@@ -783,14 +783,12 @@ export function appPageHtml() {
     });
 
     els.newJob.addEventListener("click", () => {
-      const label = window.prompt("Job label", "");
-      if (!label) return;
       const now = new Date();
       const id = String(now.getTime());
       jobs.unshift({
         id,
         createdAt: now.toISOString(),
-        label: label.trim(),
+        label: nextJobLabel(),
         sourceText: "",
         fieldNotes: "",
         ocrText: "",
@@ -803,6 +801,8 @@ export function appPageHtml() {
       activeId = id;
       saveJobs();
       render();
+      els.label.focus();
+      els.label.select();
     });
 
     els.clearDone.addEventListener("click", () => {
@@ -943,7 +943,7 @@ export function appPageHtml() {
       for (const job of jobs) {
         const button = document.createElement("button");
         button.className = "job" + (job.id === activeId ? " active" : "");
-        button.innerHTML = "<strong></strong><span><em></em><small class=\"status-pill\"></small></span>";
+        button.innerHTML = '<strong></strong><span><em></em><small class="status-pill"></small></span>';
         button.querySelector("strong").textContent = job.label || "Untitled job";
         button.querySelector("em").textContent = formatDate(job.createdAt);
         const pill = button.querySelector(".status-pill");
@@ -1112,6 +1112,15 @@ export function appPageHtml() {
 
     function appendText(existing, update) {
       return [existing, update].filter(Boolean).join("\\n");
+    }
+
+    function nextJobLabel() {
+      const base = "New job";
+      const used = new Set(jobs.map((job) => job.label));
+      if (!used.has(base)) return base;
+      let index = 2;
+      while (used.has(base + " " + index)) index += 1;
+      return base + " " + index;
     }
 
     function saveJobs() {

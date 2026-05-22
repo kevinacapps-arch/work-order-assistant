@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { appPageHtml } from "../src/appPage.mjs";
 import { buildPacket, dedupeLines, limitText, normalizeText } from "../src/sanitize.mjs";
 import { extractOutputText } from "../src/workOrderAi.mjs";
 
@@ -45,4 +46,10 @@ test("extractOutputText handles responses output array", () => {
   });
 
   assert.equal(text, "Leak is repaired.");
+});
+
+test("app page embedded script is valid browser JavaScript", () => {
+  const script = appPageHtml().match(/<script>([\s\S]*)<\/script>/)?.[1];
+  assert.ok(script);
+  assert.doesNotThrow(() => new Function(script));
 });
