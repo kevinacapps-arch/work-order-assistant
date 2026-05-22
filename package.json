@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node src/server.mjs",
-    "check": "node --check src/server.mjs && node --check src/workOrderAi.mjs && node --check src/prompt.mjs && node --check src/sanitize.mjs && node --check src/testPage.mjs && node --check src/appPage.mjs && node --check src/env.mjs",
+    "check": "node --check src/server.mjs && node --check src/workOrderAi.mjs && node --check src/prompt.mjs && node --check src/sanitize.mjs && node --check src/testPage.mjs && node --check src/appPage.mjs && node --check src/toodlesClient.js && node --check src/env.mjs",
     "test": "node --test"
   }
 }

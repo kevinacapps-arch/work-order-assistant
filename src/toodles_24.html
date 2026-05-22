@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOODLES — she knows what you did</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #0a0a08;
+  --black2:  #121210;
+  --black3:  #1a1a16;
+  --black4:  #242420;
+  --black5:  #32322c;
+  --black6:  #444440;
+  --yellow:  #f5c518;
+  --yellow2: #e0b200;
+  --yellow3: #fff0a0;
+  --orange:  #e8622a;
+  --orange2: #c44e1e;
+  --orange3: #ff8050;
+  --white:   #f0ede4;
+  --white2:  #c0bdb0;
+  --white3:  #807d72;
+  --white4:  #504e46;
+  --green:   #00d4a0;
+  --pink:    #ff4488;
+  --mono:    'DM Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --cond:    'Barlow Condensed', sans-serif;
+  --serif:   'Playfair Display', serif;
+}
+
+html { font-size: 16px; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* GRAIN */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 9000;
+  animation: grainShift 0.8s steps(1) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(-2px, 1px); }
+  50%  { transform: translate(1px, -2px); }
+  75%  { transform: translate(-1px, 2px); }
+  100% { transform: translate(2px, -1px); }
+}
+
+/* SCANLINES */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 8999;
+}
+
+/* ============================================================
+   TAPE STRIPS
+   ============================================================ */
+.chyron-stack {
+  display: flex;
+  flex-direction: column;
+}
+.chyron-top {
+  display: flex;
+  align-items: stretch;
+  height: 40px;
+  background: var(--black2);
+  border-bottom: 2px solid var(--black5);
+}
+.chyron-bug {
+  background: var(--orange);
+  color: var(--black);
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+.chyron-bug::after {
+  content: '';
+  position: absolute;
+  right: -16px; top: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 16px solid var(--orange);
+}
+.chyron-top-scroll {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-left: 28px;
+}
+.chyron-top-inner {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--cond);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  animation: chyL 90s linear infinite;
+}
+.chyron-top-inner .sep { color: var(--orange); margin: 0 20px; font-size: 12px; vertical-align: middle; }
+
+.chyron-bottom {
+  display: flex;
+  align-items: stretch;
+  height: 28px;
+  background: var(--yellow);
+}
+.chyron-slug {
+  background: var(--black);
+  color: var(--yellow);
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+.chyron-slug::after {
+  content: '';
+  position: absolute;
+  right: -12px; top: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 12px solid var(--black);
+}
+.chyron-bottom-scroll {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-left: 22px;
+}
+.chyron-bottom-inner {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  animation: chyL 140s linear infinite;
+}
+.chyron-bottom-inner .sep { margin: 0 18px; opacity: 0.4; }
+@keyframes chyL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============================================================
+   MASTHEAD — broadsheet from hell
+   ============================================================ */
+.masthead {
+  background: var(--black2);
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+  padding: 0 32px;
+}
+
+/* screentone dot pattern */
+.masthead::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, var(--black4) 1px, transparent 1px);
+  background-size: 12px 12px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.mh-dateline {
+  position: relative;
+  border-bottom: 1px solid var(--black5);
+  padding: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white4);
+}
+
+.mh-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  align-items: center;
+  padding: 12px 0 6px;
+  gap: 16px;
+}
+
+.mh-stat {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white4);
+  line-height: 1.8;
+}
+.mh-stat-num {
+  display: block;
+  font-family: var(--display);
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.mh-stat-num.yellow { color: var(--yellow); }
+.mh-stat-num.orange { color: var(--orange); }
+
+.mh-center { text-align: center; }
+.mh-center h1 {
+  font-family: var(--display);
+  font-size: clamp(80px, 11vw, 128px);
+  line-height: 0.82;
+  letter-spacing: 0.015em;
+  color: var(--white);
+  position: relative;
+}
+/* shadow stack */
+.mh-center h1 span.shadow {
+  position: absolute; inset: 0;
+  color: var(--yellow);
+  transform: translate(5px, 5px);
+  z-index: -1;
+}
+.mh-center h1 span.shadow2 {
+  position: absolute; inset: 0;
+  color: var(--orange);
+  transform: translate(10px, 10px);
+  z-index: -2;
+}
+
+.mh-tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--white4);
+  letter-spacing: 0.04em;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.mh-deck {
+  position: relative;
+  border-top: 1px solid var(--black5);
+  padding: 7px 0;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+.mh-deck-item {
+  font-family: var(--cond);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--white4);
+  letter-spacing: 0.06em;
+  padding: 0 20px;
+  border-right: 1px solid var(--black5);
+}
+.mh-deck-item:last-child { border-right: none; }
+
+/* ============================================================
+   ACCESS
+   ============================================================ */
+.access-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 32px;
+  background: var(--black3);
+  border-bottom: 1px solid var(--black4);
+  flex-wrap: wrap;
+  position: relative; z-index: 10;
+}
+.access-lbl {
+  font-family: var(--cond);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--white4);
+  white-space: nowrap;
+}
+.access-bar input[type=password] {
+  background: var(--black);
+  border: 1px solid var(--black5);
+  border-radius: 2px;
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: 0.1em;
+  padding: 6px 12px;
+  outline: none;
+  width: 220px;
+  caret-color: var(--yellow);
+  transition: border-color 0.15s;
+}
+.access-bar input:focus { border-color: var(--yellow); }
+.access-bar input::placeholder { color: var(--white4); font-style: italic; }
+
+.access-status {
+  font-family: var(--mono);
+  font-size: 11px; font-style: italic;
+  color: var(--white4); flex: 1;
+}
+.access-status.on { color: var(--green); font-style: normal; }
+.access-status.on::before { content: '▶ '; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  font-family: var(--cond);
+  font-size: 13px; font-weight: 900;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border: none; border-radius: 1px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.08s;
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.28; cursor: not-allowed; transform: none; }
+
+.btn-y  { background: var(--yellow); color: var(--black); }
+.btn-y:hover:not(:disabled)  { background: var(--yellow3); }
+.btn-o  { background: var(--orange); color: var(--white); }
+.btn-o:hover:not(:disabled)  { background: var(--orange3); }
+.btn-g  { background: transparent; color: var(--white3); border: 1px solid var(--black5); }
+.btn-g:hover:not(:disabled)  { border-color: var(--white3); color: var(--white); }
+.btn-gr { background: var(--green); color: var(--black); }
+.btn-gr:hover:not(:disabled) { filter: brightness(1.1); }
+.btn-p  { background: var(--pink); color: var(--white); box-shadow: 0 0 16px rgba(255,68,136,0.35); }
+.btn-p:hover:not(:disabled)  { box-shadow: 0 0 24px rgba(255,68,136,0.55); filter: brightness(1.1); }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app-shell {
+  display: grid;
+  grid-template-columns: 265px 1fr;
+  min-height: calc(100vh - 260px);
+  position: relative; z-index: 10;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  background: var(--black2);
+  border-right: 1px solid var(--black4);
+  display: flex; flex-direction: column;
+}
+.sb-head {
+  padding: 16px 18px 12px;
+  border-bottom: 2px solid var(--black4);
+}
+.sb-title {
+  font-family: var(--display);
+  font-size: 34px; letter-spacing: 0.06em;
+  color: var(--yellow);
+  line-height: 1; margin-bottom: 2px;
+}
+.sb-sub {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--white4); margin-bottom: 10px;
+}
+.new-job-btn {
+  width: 100%; padding: 8px 12px;
+  background: transparent;
+  border: 1px dashed var(--black5);
+  color: var(--white4);
+  font-family: var(--cond);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s;
+  display: flex; align-items: center; gap: 8px;
+}
+.new-job-btn:before { content: '+'; font-size: 16px; color: var(--yellow); }
+.new-job-btn:hover { border-color: var(--yellow); color: var(--yellow); border-style: solid; }
+
+.job-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+
+.job-item {
+  padding: 10px 18px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.1s;
+}
+.job-item:hover { background: var(--black3); }
+.job-item.active { background: var(--black3); border-left-color: var(--yellow); }
+.job-name { font-family: var(--cond); font-size: 14px; font-weight: 700; letter-spacing: 0.04em; color: var(--white2); }
+.job-item.active .job-name { color: var(--yellow); }
+.job-wo   { font-size: 11px; color: var(--white4); margin-top: 2px; }
+.job-quip { font-size: 10px; font-style: italic; color: var(--black6); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-badge {
+  display: inline-block;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 1px 6px; margin-top: 4px;
+  border-radius: 1px;
+}
+.badge-draft { background: var(--black4); color: var(--white4); }
+.badge-final { background: rgba(0,212,160,0.12); color: var(--green); }
+
+.sb-footer {
+  padding: 12px 18px;
+  border-top: 1px solid var(--black4);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.sb-mood {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--black6); text-align: center;
+  min-height: 14px;
+  transition: opacity 0.4s;
+}
+
+/* ============================================================
+   MAIN — two columns: inputs left, note right (full height)
+   ============================================================ */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  grid-template-rows: auto 1fr;
+  min-height: calc(100vh - 260px);
+}
+
+.job-header {
+  grid-column: 1 / -1;
+  padding: 16px 28px 14px;
+  background: var(--black2);
+  border-bottom: 1px solid var(--black4);
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px;
+}
+.job-header-title {
+  font-family: var(--display);
+  font-size: clamp(28px, 3.5vw, 46px);
+  letter-spacing: 0.03em;
+  color: var(--white);
+  line-height: 0.95;
+}
+.job-header-title em { font-style: normal; color: var(--orange3); }
+.job-header-sub {
+  font-family: var(--mono);
+  font-size: 11px; font-style: italic;
+  color: var(--white4); margin-top: 6px;
+}
+.job-header-actions { display: flex; gap: 8px; padding-top: 4px; flex-shrink: 0; }
+
+/* INPUT COLUMNS — left side, scrollable */
+.input-zone {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow-y: auto;
+  align-content: start;
+}
+.col {
+  padding: 20px 24px;
+  border-right: 1px solid var(--black4);
+}
+.col:last-child { border-right: none; }
+
+.col-label {
+  font-family: var(--display);
+  font-size: 20px; letter-spacing: 0.1em;
+  color: var(--yellow);
+  margin-bottom: 4px;
+}
+.col-label-sub {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--white4); margin-bottom: 16px;
+}
+
+.field { margin-bottom: 15px; }
+.fl {
+  font-family: var(--cond);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--white4); margin-bottom: 5px;
+  display: flex; align-items: baseline;
+  gap: 6px; flex-wrap: wrap;
+}
+.fl .q {
+  font-family: var(--mono);
+  font-weight: 300; font-style: italic;
+  text-transform: none; letter-spacing: 0;
+  font-size: 10px; color: var(--black6);
+}
+
+textarea, input[type=text], input[type=password] {
+  width: 100%;
+  background: var(--black3);
+  border: 1px solid var(--black5);
+  border-radius: 1px;
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 13px; line-height: 1.6;
+  padding: 8px 11px;
+  outline: none; resize: vertical;
+  transition: border-color 0.1s, background 0.1s;
+  caret-color: var(--yellow);
+}
+textarea { min-height: 76px; }
+textarea:focus, input[type=text]:focus { border-color: var(--yellow); background: var(--black4); }
+textarea::placeholder, input::placeholder { color: var(--black6); font-style: italic; font-size: 12px; }
+
+/* PILLS */
+.pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 2px; }
+.pill {
+  font-family: var(--cond);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border: 1px solid var(--black5);
+  border-radius: 1px;
+  color: var(--white4);
+  cursor: pointer; user-select: none;
+  transition: all 0.08s;
+}
+.pill:hover { border-color: var(--yellow); color: var(--yellow); }
+.pill.on { background: var(--yellow); color: var(--black); border-color: var(--yellow); font-weight: 900; }
+
+/* ============================================================
+   OUTPUT — right panel, full height, always visible
+   ============================================================ */
+.output {
+  grid-column: 2;
+  grid-row: 2;
+  border-left: 3px solid var(--orange);
+  background: var(--black2);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 260px);
+  overflow: hidden;
+}
+
+.output-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 2px solid var(--orange);
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--black);
+}
+.output-title {
+  font-family: var(--display);
+  font-size: 42px; letter-spacing: 0.06em;
+  line-height: 0.9;
+  color: var(--white);
+}
+.output-title em {
+  font-style: normal;
+  color: var(--yellow);
+}
+.output-sub {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--white4); margin-top: 6px;
+}
+.output-acts { display: flex; gap: 8px; align-items: center; flex-shrink: 0; padding-top: 4px; }
+
+.output-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#noteBox {
+  font-family: var(--mono);
+  font-size: 13px; line-height: 1.9;
+  color: var(--white4);
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--black4);
+  padding: 0 0 16px 0;
+  white-space: pre-wrap;
+  font-style: italic;
+  overflow-y: auto;
+}
+#noteBox.has { font-style: normal; color: var(--white); }
+
+.rev-row { display: flex; gap: 8px; margin-top: 14px; flex-shrink: 0; }
+.rev-row input { flex: 1; }
+
+/* BIG MAKE NOTE BUTTON inside output panel */
+.btn-make {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  background: var(--orange);
+  color: var(--black);
+  font-family: var(--display);
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.08s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-make::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--yellow);
+  transform: translateX(-100%);
+  transition: transform 0.15s;
+}
+.btn-make:hover:not(:disabled)::after { transform: translateX(0); }
+.btn-make:hover:not(:disabled) { color: var(--black); }
+.btn-make span { position: relative; z-index: 1; }
+.btn-make:disabled { background: var(--black4); color: var(--black6); cursor: not-allowed; }
+.btn-make:active:not(:disabled) { transform: scale(0.98); }
+
+/* LOADING DOTS */
+.dots { display: none; gap: 5px; align-items: center; }
+.dots.on { display: flex; }
+.dots span {
+  width: 7px; height: 7px; border-radius: 50%;
+  animation: dot 1s ease-in-out infinite;
+}
+.dots span:nth-child(1) { background: var(--yellow); }
+.dots span:nth-child(2) { background: var(--orange); animation-delay: 0.2s; }
+.dots span:nth-child(3) { background: var(--pink);   animation-delay: 0.4s; }
+@keyframes dot {
+  0%,60%,100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  30% { transform: translateY(-8px) scale(1.2); opacity: 1; }
+}
+
+/* ============================================================
+   FOOTER BAR
+   ============================================================ */
+.footer-bar {
+  position: relative; z-index: 10;
+  padding: 8px 32px;
+  background: var(--black2);
+  border-top: 1px solid var(--black4);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap;
+}
+.footer-txt {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--black6); letter-spacing: 0.06em;
+}
+
+
+/* ── FOOTER CHYRON — replaces the text footer ── */
+.chyron-footer {
+  display: flex;
+  flex-direction: column;
+  background: var(--black);
+  border-top: 3px solid var(--black4);
+}
+.chyron-footer .chyron-top { border-bottom: 2px solid var(--black5); }
+.chyron-footer .chyron-bug { background: var(--black4); color: var(--white3); }
+.chyron-footer .chyron-bug::after { border-left-color: var(--black4); }
+.chyron-footer .chyron-top-inner { color: var(--white3); font-size: 13px; animation-duration: 120s; }
+.chyron-footer .chyron-bottom { background: var(--black2); }
+.chyron-footer .chyron-slug { background: var(--black4); color: var(--white4); font-size: 11px; }
+.chyron-footer .chyron-slug::after { border-left-color: var(--black4); }
+.chyron-footer .chyron-bottom-inner { color: var(--white4); animation-duration: 180s; font-size: 11px; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  font-family: var(--display);
+  font-size: 22px; letter-spacing: 0.12em;
+  padding: 10px 24px;
+  opacity: 0; transform: translateY(10px) rotate(-1deg);
+  pointer-events: none; transition: all 0.16s;
+  z-index: 99999;
+}
+.toast.show { opacity: 1; transform: translateY(0) rotate(-1deg); }
+.toast.y { background: var(--yellow); color: var(--black); box-shadow: 4px 4px 0 var(--orange); }
+.toast.p { background: var(--pink); color: var(--white); box-shadow: 4px 4px 0 var(--black), 0 0 20px rgba(255,68,136,0.4); }
+.toast.g { background: var(--green); color: var(--black); box-shadow: 4px 4px 0 var(--black4); }
+
+/* PAUSE CRAWLS ON INPUT FOCUS */
+body.typing .chyron-top-inner,
+body.typing .chyron-bottom-inner { animation-play-state: paused; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--black2); }
+::-webkit-scrollbar-thumb { background: var(--black5); }
+::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+/* ============================================================
+   MATRIX ERROR MODE
+   ============================================================ */
+body.fault {
+  --yellow:  #5af578;
+  --yellow2: #3dd45a;
+  --yellow3: #c8ffd4;
+  --orange:  #3dd45a;
+  --orange2: #2ab048;
+  --orange3: #7fff96;
+  --white:   #5af578;
+  --white2:  #3dd45a;
+  --white3:  #2ab048;
+  --white4:  #1a7a30;
+  --black:   #000800;
+  --black2:  #000f00;
+  --black3:  #001400;
+  --black4:  #001c00;
+  --black5:  #002600;
+  --black6:  #003300;
+  --green:   #5af578;
+  --pink:    #5af578;
+}
+body.fault {
+  image-rendering: pixelated;
+}
+/* PIP-BOY scanlines — heavier than normal */
+body.fault::after {
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 1px,
+    rgba(0,0,0,0.22) 1px, rgba(0,0,0,0.22) 2px
+  ) !important;
+  opacity: 1 !important;
+}
+/* pip-boy phosphor flicker on everything */
+body.fault * {
+  text-shadow: 0 0 4px currentColor;
+}
+body.fault #noteBox {
+  font-family: var(--mono) !important;
+  letter-spacing: 0.06em;
+  animation: pipFlicker 4s steps(1) infinite;
+}
+@keyframes pipFlicker {
+  0%,89%,91%,93%,100% { opacity: 1; }
+  90%  { opacity: 0.85; }
+  92%  { opacity: 0.95; }
+}
+body.fault .mh-center h1 {
+  animation: pipGlitch 6s steps(1) infinite;
+  letter-spacing: 0.04em;
+}
+@keyframes pipGlitch {
+  0%,94%,100% { transform: none; clip-path: none; }
+  95% { transform: translate(-2px,0); clip-path: inset(20% 0 60% 0); }
+  96% { transform: translate(2px,0);  clip-path: inset(60% 0 10% 0); }
+  97% { transform: none; clip-path: none; }
+}
+/* VAULT-TEC radiation warning blink on DEVELOPING bug */
+body.fault .chyron-bug {
+  animation: radBlink 1.4s steps(1) infinite !important;
+}
+@keyframes radBlink {
+  0%,49%,100% { opacity: 1; }
+  50%,98%     { opacity: 0.4; }
+}
+/* pip-boy border glow on output panel */
+body.fault .output {
+  box-shadow: 0 0 20px rgba(90,245,120,0.15), inset 0 0 10px rgba(90,245,120,0.05);
+}
+
+/* GFCI OUTLET — sidebar widget */
+.gfci-outlet-wrap {
+  padding: 16px 18px;
+  border-top: 1px solid var(--black4);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.gfci-outlet-label {
+  font-family: var(--cond);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--white4);
+  align-self: flex-start;
+}
+.faceplate {
+  width: 90px; height: 80px;
+  background: #d0ccc4;
+  border-radius: 6px;
+  border: 2px solid #a8a49c;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0; position: relative;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.18), 0 4px 14px rgba(0,0,0,0.6);
+  transition: background 0.3s;
+  cursor: default;
+}
+.faceplate.tripped { background: #c0bcb4; }
+.fp-screw {
+  position: absolute; width: 10px; height: 10px;
+  background: #b0aca4; border-radius: 50%;
+  border: 1px solid #989490;
+}
+.fp-screw::after { content:''; position:absolute; width:6px; height:1.5px; background:#7a7672; border-radius:1px; top:50%; left:50%; transform:translate(-50%,-50%) rotate(40deg); }
+.fp-screw.t { top: 7px; } .fp-screw.b { bottom: 7px; }
+.fp-slots { display:flex; gap:14px; margin-bottom:4px; }
+.fp-pair { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.fp-slot { background:#1a1a16; border:1px solid #0a0a08; }
+.fp-tall { width:4px; height:11px; border-radius:1px; }
+.fp-wide { width:5px; height:10px; border-radius:1px; }
+.fp-gnd  { width:5px; height:5px; border-radius:50%; margin-top:1px; }
+.fp-light {
+  width:6px; height:6px; border-radius:50%;
+  border:1px solid #808078; background:#2a2a26;
+  margin: 4px 0; transition: background 0.2s, box-shadow 0.2s;
+}
+.faceplate.normal .fp-light { background:#00d4a0; box-shadow: 0 0 5px #00d4a0; }
+.faceplate.tripped .fp-light { background:#e8622a; box-shadow: 0 0 7px #e8622a; }
+.fp-btns { display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:2px; }
+.fp-pill {
+  width:52px; height:16px; border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size:11px; letter-spacing:0.12em;
+  cursor:pointer; border:none; outline:none;
+  transition: transform 0.05s;
+  -webkit-user-select:none; user-select:none;
+}
+.fp-test {
+  background:#e8622a; color:#0a0a08;
+  box-shadow: 0 3px 0 #8c3010, 0 4px 6px rgba(0,0,0,0.4);
+}
+.fp-test:active { transform:translateY(3px); box-shadow:0 0 0 #8c3010; }
+.fp-reset {
+  background:#b8b4ac; color:#282420;
+  box-shadow: 0 3px 0 #787470, 0 4px 6px rgba(0,0,0,0.35);
+  transition: transform 0.05s, background 0.2s, box-shadow 0.2s;
+}
+.fp-reset:active { transform:translateY(3px); box-shadow:0 0 0 #787470; }
+.faceplate.tripped .fp-reset {
+  background:#f5c518; color:#0a0a08;
+  box-shadow: 0 5px 0 #a07800, 0 6px 10px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+  animation: resetPulse 1.2s ease-in-out infinite;
+}
+.faceplate.tripped .fp-reset:active { transform:translateY(3px); box-shadow:0 0 0 #a07800; animation:none; }
+@keyframes resetPulse {
+  0%,100% { box-shadow:0 5px 0 #a07800, 0 6px 10px rgba(0,0,0,0.5); }
+  50%      { box-shadow:0 5px 0 #a07800, 0 6px 16px rgba(245,197,24,0.35); }
+}
+.gfci-status {
+  font-family: var(--mono);
+  font-size: 10px; font-style: italic;
+  color: var(--white4); text-align: center;
+  min-height: 13px; transition: color 0.3s;
+}
+body.fault .gfci-status { color: var(--green); animation: matrixFlicker 0.4s steps(1) infinite; }
+
+/* FAULT CHYRON OVERRIDE — top chyron goes full matrix when fault */
+body.fault .chyron-bug { background: var(--orange) !important; color: var(--black) !important; }
+body.fault .chyron-bug::after { border-left-color: var(--orange) !important; }
+body.fault .chyron-slug { background: var(--black4) !important; color: var(--yellow) !important; }
+body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .main { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .job-header { grid-column: 1; }
+  .input-zone { grid-column: 1; grid-row: 2; overflow-y: visible; }
+  .output {
+    grid-column: 1; grid-row: 3;
+    border-left: none; border-top: 3px solid var(--orange);
+    position: static; height: auto; min-height: 400px;
+  }
+  #noteBox { flex: none; min-height: 200px; }
+}
+@media (max-width: 860px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .input-zone { grid-template-columns: 1fr; }
+  .col { border-right: none; border-bottom: 1px solid var(--black4); }
+  .mh-body { grid-template-columns: 1fr; }
+  .mh-stat { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- CHYRON — Fox News parody, black/yellow/orange palette -->
+<div class="chyron-stack" aria-hidden="true">
+  <div class="chyron-top">
+    <div class="chyron-bug">REVIEWS</div>
+    <div class="chyron-top-scroll">
+      <span class="chyron-top-inner">
+        WORK ORDER FILED IN UNIT 4B <span class="sep">●</span> TENANT REPORTS "EXASERBATED" ISSUE — TOODLES KNEW WHAT THEY MEANT <span class="sep">●</span> SITUATION DESCRIBED AS FINE <span class="sep">●</span> SOURCES CONFIRM IT WAS NOT FINE <span class="sep">●</span> TECHNICIAN NOTES "DETERIATED" CONDITIONS — TOODLES FIXED IT IN THE NOTE <span class="sep">●</span> PREVIOUS TECH UNAVAILABLE FOR COMMENT <span class="sep">●</span> LEAK DESCRIBED AS "INTERMITANT" — TOODLES SPELLED IT RIGHT <span class="sep">●</span> ZIP TIES INVOLVED <span class="sep">●</span> UNIT EXPERIENCING "MOLD SITUATON" — SHE HANDLED IT <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
+        WORK ORDER FILED IN UNIT 4B <span class="sep">●</span> TENANT REPORTS "EXASERBATED" ISSUE — TOODLES KNEW WHAT THEY MEANT <span class="sep">●</span> SITUATION DESCRIBED AS FINE <span class="sep">●</span> SOURCES CONFIRM IT WAS NOT FINE <span class="sep">●</span> TECHNICIAN NOTES "DETERIATED" CONDITIONS — TOODLES FIXED IT IN THE NOTE <span class="sep">●</span> PREVIOUS TECH UNAVAILABLE FOR COMMENT <span class="sep">●</span> LEAK DESCRIBED AS "INTERMITANT" — TOODLES SPELLED IT RIGHT <span class="sep">●</span> ZIP TIES INVOLVED <span class="sep">●</span> UNIT EXPERIENCING "MOLD SITUATON" — SHE HANDLED IT <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
+      </span>
+    </div>
+  </div>
+  <div class="chyron-bottom">
+    <div class="chyron-slug">TESTIMONIALS</div>
+    <div class="chyron-bottom-scroll">
+      <span class="chyron-bottom-inner">
+        ★★★★★ "I HAVE WRITTEN OVER A THOUSAND LETTERS. NONE AS EFFICIENT AS THIS." — BENJAMIN FRANKLIN <span class="sep">◆</span> ★★★★★ "THE SISTINE CHAPEL HAD SIGNIFICANT WATER DAMAGE. HAD I HAD TOODLES THE DOCUMENTATION ALONE WOULD HAVE SAVED ME MONTHS." — MICHELANGELO <span class="sep">◆</span> ★★★★★ "I DISSECTED CADAVERS AND WROTE UP EVERY FINDING. THIS IS FASTER." — LEONARDO DA VINCI <span class="sep">◆</span> ★★★★★ "I ONCE WROTE A 95-POINT COMPLAINT ABOUT CHURCH ADMINISTRATION. TOODLES WOULD HAVE CUT IT TO TWO PARAGRAPHS. SHE IS RIGHT." — MARTIN LUTHER <span class="sep">◆</span> ★★★★★ "I CHARTED THE ENTIRE OCEAN. THE PAPERWORK WAS THE HARDEST PART." — FERDINAND MAGELLAN <span class="sep">◆</span>
+        ★★★★★ "I HAVE WRITTEN OVER A THOUSAND LETTERS. NONE AS EFFICIENT AS THIS." — BENJAMIN FRANKLIN <span class="sep">◆</span> ★★★★★ "THE SISTINE CHAPEL HAD SIGNIFICANT WATER DAMAGE. HAD I HAD TOODLES THE DOCUMENTATION ALONE WOULD HAVE SAVED ME MONTHS." — MICHELANGELO <span class="sep">◆</span> ★★★★★ "I DISSECTED CADAVERS AND WROTE UP EVERY FINDING. THIS IS FASTER." — LEONARDO DA VINCI <span class="sep">◆</span> ★★★★★ "I ONCE WROTE A 95-POINT COMPLAINT ABOUT CHURCH ADMINISTRATION. TOODLES WOULD HAVE CUT IT TO TWO PARAGRAPHS. SHE IS RIGHT." — MARTIN LUTHER <span class="sep">◆</span> ★★★★★ "I CHARTED THE ENTIRE OCEAN. THE PAPERWORK WAS THE HARDEST PART." — FERDINAND MAGELLAN <span class="sep">◆</span>
+      </span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mh-dateline">
+    <span>Field Operations · Note Generation Division</span>
+    <span id="topDate"></span>
+    <span>Field Operations · Note Generation Division</span>
+  </div>
+  <div class="mh-body">
+    <div class="mh-stat">
+      <span class="mh-stat-num yellow" id="jobCount">2</span>
+      Jobs<br>Documented<br>This Session
+    </div>
+    <div class="mh-center">
+      <h1>
+        TOODLES
+        <span class="shadow" aria-hidden="true">TOODLES</span>
+        <span class="shadow2" aria-hidden="true">TOODLES</span>
+      </h1>
+      <div class="mh-tagline">for people who are great with tools and terrible with keyboards</div>
+    </div>
+    <div class="mh-stat" style="text-align:right">
+      <span class="mh-stat-num orange" id="noteCount">0</span>
+      Notes<br>Generated<br>This Session
+    </div>
+  </div>
+  <div class="mh-deck">
+    <span class="mh-deck-item">She Doesn't Judge</span>
+    <span class="mh-deck-item">She Just Writes It Down</span>
+    <span class="mh-deck-item">Toodles Knows What You Did</span>
+    <span class="mh-deck-item">Est. The Day You First Had To Write A Note In A Parking Lot</span>
+  </div>
+</header>
+
+
+<!-- ACCESS -->
+<div class="access-bar">
+  <span class="access-lbl">🔒 Access</span>
+  <input type="password" id="codeInput" placeholder="sk-ant-... you know the one" maxlength="300" />
+  <button class="btn btn-y" onclick="unlock()">Unlock</button>
+  <span class="access-status" id="accessStatus">locked · toodles is waiting · she is patient · she has seen things</span>
+
+</div>
+
+<!-- APP -->
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-head">
+      <div class="sb-title">THE PILE</div>
+      <div class="sb-sub">one bucket per work order. or per near-death experience. your call.</div>
+      <button class="new-job-btn" onclick="addJob()">New Job</button>
+    </div>
+    <div class="job-list" id="jobList"></div>
+    <div class="sb-footer">
+      <button class="btn btn-g" style="font-size:11px;padding:6px 12px;" onclick="nukeAll()">Nuke All Jobs</button>
+      <div class="sb-mood" id="sbMood">toodles is ready when you are</div>
+    </div>
+    <div class="gfci-outlet-wrap">
+      <span class="gfci-outlet-label">GFCI Protected</span>
+      <div class="faceplate normal" id="fpPlate">
+        <div class="fp-light" id="fpLight"></div>
+        <div class="fp-btns">
+          <button type="button" class="fp-pill fp-test" onclick="gfciTrip()">TEST</button>
+          <button type="button" class="fp-pill fp-reset" onclick="gfciTrip()">RESET</button>
+        </div>
+      </div>
+      <div class="gfci-status" id="gfciStatus">circuit protected</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="job-header">
+      <div>
+        <div class="job-header-title" id="jobTitle">SELECT A JOB — <em>OR START ONE</em></div>
+        <div class="job-header-sub" id="jobSub">no job selected · toodles is here · she has snacks · metaphorically</div>
+      </div>
+      <div class="job-header-actions">
+        <button class="btn btn-g" onclick="clearFields()">Clear</button>
+        <button class="btn btn-o" id="makeBtn" onclick="makeNote()" disabled>Make Note</button>
+      </div>
+    </div>
+
+    <div class="input-zone">
+      <!-- LEFT -->
+      <div class="col">
+        <div class="col-label">THE COMPLAINT</div>
+        <div class="col-label-sub">raw, unfiltered, possibly unspellchecked</div>
+
+        <div class="field">
+          <div class="fl">Job Label <span class="q">— what do you call this one at the bar</span></div>
+          <input type="text" id="jobLabel" placeholder="e.g. Unit 4B – The Drip" oninput="syncLabel()" />
+        </div>
+
+        <div class="field">
+          <div class="fl">Original WO / Tenant Complaint <span class="q">— their words, bless their hearts</span></div>
+          <textarea id="complaint" rows="4" placeholder='paste the WO. quote the tenant verbatim.
+"it smell" is a complete sentence. toodles understands.'></textarea>
+        </div>
+
+        <div class="field">
+          <div class="fl">What Actually Happened Onsite <span class="q">— the unvarnished truth</span></div>
+          <textarea id="onsite" rows="5" placeholder="what you found. what you did about it.
+the thing behind the thing is worth mentioning.
+it was worse than it looked. it always is."></textarea>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col">
+        <div class="col-label">THE ALIBI</div>
+        <div class="col-label-sub">toodles doesn't judge. management might. that's their problem.</div>
+
+        <div class="field">
+          <div class="fl">Why Labor Took What It Took <span class="q">— select all that apply, we believe every word</span></div>
+          <div class="pills">
+            <span class="pill" onclick="tp(this)">Tight access</span>
+            <span class="pill" onclick="tp(this)">Troubleshooting</span>
+            <span class="pill" onclick="tp(this)">Supply run</span>
+            <span class="pill" onclick="tp(this)">Traffic</span>
+            <span class="pill" onclick="tp(this)">Two-person job</span>
+            
+            <span class="pill" onclick="tp(this)">Tenant intervention</span>
+            <span class="pill" onclick="tp(this)">Previous tech left gifts</span>
+            <span class="pill" onclick="tp(this)">It was worse than it looked</span>
+            <span class="pill" onclick="tp(this)">Genuinely unexplainable</span>
+            <span class="pill" onclick="tp(this)">The building is haunted</span>
+          </div>
+          <textarea id="labor" rows="3" style="margin-top:9px" placeholder="anything else. toodles has seen worse. she has seen the inside of walls."></textarea>
+        </div>
+
+        <div class="field">
+          <div class="fl">Follow-Up / Next Steps <span class="q">— what's still broken (it's fine, it's always fine)</span></div>
+          <textarea id="followup" rows="3" placeholder="parts on order, or tenant situation, or 'it's fine for now' — whatever's true."></textarea>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- OUTPUT -->
+    <div class="output">
+      <div class="output-head">
+        <div>
+          <div class="output-title">THE <em>NOTE</em></div>
+          <div class="output-sub" id="outputSub">waiting for your input · not judging · definitely not judging · okay maybe a little</div>
+        </div>
+        <div class="output-acts">
+          <div class="dots" id="dots"><span></span><span></span><span></span></div>
+          <button class="btn btn-g" id="copyBtn" onclick="copyNote()" style="display:none">Copy</button>
+          <button class="btn btn-gr" id="finalBtn" onclick="markFinal()" style="display:none">Mark Final</button>
+        </div>
+      </div>
+      <div class="output-body">
+        <button class="btn btn-make" id="makeBtn2" onclick="makeNote()" disabled>
+          <span id="makeBtn2Label">OH TOODLES!</span>
+        </button>
+        <div id="noteBox">fill in the fields.
+hit Make Note.
+nobody will ask questions.</div>
+        <div class="rev-row">
+          <input type="text" id="revInput" placeholder='shorter · more formal · "remove the zip tie part" · make it sound like i planned all of this' />
+          <button class="btn btn-o" id="revBtn" onclick="revise()" disabled>Revise</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER CHYRON — replaces text footer, same chyron grammar, muted palette -->
+<div class="chyron-footer chyron-stack" aria-hidden="true">
+  <div class="chyron-top">
+    <div class="chyron-bug">DISCLAIMER</div>
+    <div class="chyron-top-scroll">
+      <span class="chyron-top-inner">
+        NOT LEGAL ADVICE <span class="sep">●</span> NOT MEDICAL ADVICE <span class="sep">●</span> NOT A SUBSTITUTE FOR CALLING IT IN <span class="sep">●</span> TOODLES © <span id="yr"></span> <span class="sep">●</span> FIELD OPERATIONS DIVISION <span class="sep">●</span> POWERED BY ANTHROPIC <span class="sep">●</span> NOT LEGAL ADVICE <span class="sep">●</span> NOT MEDICAL ADVICE <span class="sep">●</span> NOT A SUBSTITUTE FOR CALLING IT IN <span class="sep">●</span> TOODLES © <span id="yr2"></span> <span class="sep">●</span> FIELD OPERATIONS DIVISION <span class="sep">●</span> POWERED BY ANTHROPIC <span class="sep">●</span>
+      </span>
+    </div>
+  </div>
+  <div class="chyron-bottom">
+    <div class="chyron-slug">EST.</div>
+    <div class="chyron-bottom-scroll">
+      <span class="chyron-bottom-inner">
+        INSPIRED BY EVERY NOTE WRITTEN AT 6AM IN A PARKING LOT ON A PHONE WITH A CRACKED SCREEN <span class="sep">◆</span> "DETERIATED" SUBMITTED TO MANAGEMENT <span class="sep">◆</span> TOODLES CORRECTED IT <span class="sep">◆</span> NOBODY ASKED <span class="sep">◆</span> SHE WILL NOT TESTIFY <span class="sep">◆</span> YOUR CHAOS HER GRAMMAR <span class="sep">◆</span> "PLUMMER" IS NOT HOW YOU SPELL IT BUT SHE KNOWS WHAT YOU DO <span class="sep">◆</span> THE BUILDING MAY BE HAUNTED — OUTSIDE SCOPE OF THIS APPLICATION <span class="sep">◆</span> "LEEK" AND "LEAK" ARE DIFFERENT — SHE PICKED THE RIGHT ONE <span class="sep">◆</span>
+        INSPIRED BY EVERY NOTE WRITTEN AT 6AM IN A PARKING LOT ON A PHONE WITH A CRACKED SCREEN <span class="sep">◆</span> "DETERIATED" SUBMITTED TO MANAGEMENT <span class="sep">◆</span> TOODLES CORRECTED IT <span class="sep">◆</span> NOBODY ASKED <span class="sep">◆</span> SHE WILL NOT TESTIFY <span class="sep">◆</span> YOUR CHAOS HER GRAMMAR <span class="sep">◆</span> "PLUMMER" IS NOT HOW YOU SPELL IT BUT SHE KNOWS WHAT YOU DO <span class="sep">◆</span> THE BUILDING MAY BE HAUNTED — OUTSIDE SCOPE OF THIS APPLICATION <span class="sep">◆</span> "LEEK" AND "LEAK" ARE DIFFERENT — SHE PICKED THE RIGHT ONE <span class="sep">◆</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   TOODLES — SHE'S A CHARACTER
+   ============================================================ */
+const MOODS = [
+  "she has been inside more walls than she'll say.",
+  "not a licensed contractor. just right about everything.",
+  "the zip ties stay between us.",
+  "it was like that when you got there. noted.",
+  "'upon further investigation' is just 'i dunno' in a suit.",
+  "management doesn't need to know all of it.",
+  "quick jobs are a myth she respects but does not believe in.",
+  "she remembers every job. every. single. one.",
+  "not mad. just keeping records.",
+  "that smell was pre-existing. she'll say so.",
+  "forty words. they asked for clarification. she declined.",
+  "the building might be haunted. not her department.",
+  "your chaos. her grammar.",
+  "she's seen the inside of that wall. it explains a lot.",
+  "six hours. she said nothing. she wrote it up clean.",
+  "'exaserbated' — she knew what you meant.",
+  "you wrote 'deteriated.' she wrote 'deteriorated.' same job.",
+  "'intermitant' is not a word. the leak was though. she documented it.",
+  "she has never once written 'plummer.'",
+  "'leek' is a vegetable. she caught it. said nothing.",
+  "you spelled 'maintanance' four different ways. she picked one.",
+];
+
+const LOAD_LINES = [
+  "choosing words...",
+  "pretending she was there...",
+  "making you look like you planned this...",
+  "deciding what management needs to know...",
+  "omitting the zip tie part...",
+  "translating 'it was bad' into professional...",
+  "polishing...",
+  "crafting a narrative...",
+];
+
+/* STATE */
+let unlocked = false, noteGenerated = false;
+let noteCount = 0, currentJob = null;
+let _key = '';
+const history = [];
+
+const jobs = [
+  { id:1, name:'Unit 4B – HVAC Leak',     wo:'WO #2241', status:'draft', quip:'"the ceiling is doing something"' },
+  { id:2, name:'Commons – Door Closer',    wo:'WO #2238', status:'final', quip:'"it don\'t close right"' },
+];
+let nextId = 3;
+
+/* PAUSE CRAWLS WHEN TYPING */
+document.addEventListener('focusin',  e => { if(e.target.matches('input,textarea')) document.body.classList.add('typing'); });
+document.addEventListener('focusout', e => { if(e.target.matches('input,textarea')) document.body.classList.remove('typing'); });
+
+/* INIT */
+document.getElementById('topDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+document.getElementById('yr').textContent = new Date().getFullYear();
+  document.getElementById('yr2').textContent = new Date().getFullYear();
+currentJob = jobs[0].id;
+renderJobs();
+setInterval(() => {
+  const el = document.getElementById('sbMood');
+  el.style.opacity = '0';
+  setTimeout(() => { el.textContent = MOODS[Math.floor(Math.random()*MOODS.length)]; el.style.opacity = '1'; }, 400);
+}, 7000);
+
+/* RENDER */
+function renderJobs() {
+  document.getElementById('jobList').innerHTML = jobs.map(j => `
+    <div class="job-item${j.id===currentJob?' active':''}" onclick="selJob(${j.id})">
+      <div class="job-name">${j.name}</div>
+      <div class="job-wo">${j.wo}</div>
+      <div class="job-quip">${j.quip||''}</div>
+      <span class="job-badge ${j.status==='final'?'badge-final':'badge-draft'}">${j.status}</span>
+    </div>`).join('');
+  document.getElementById('jobCount').textContent = jobs.length;
+  document.getElementById('noteCount').textContent = noteCount;
+}
+
+function selJob(id) {
+  currentJob = id;
+  const j = jobs.find(x=>x.id===id);
+  setHeader(j.name, j.wo + ' · ' + j.status + ' · toodles is on it');
+  renderJobs();
+}
+
+function setHeader(name, sub) {
+  const p = name.split(/\s*[–—-]\s*/);
+  document.getElementById('jobTitle').innerHTML =
+    p.length > 1
+      ? p[0].trim().toUpperCase() + ' — <em>' + p.slice(1).join('—').trim().toUpperCase() + '</em>'
+      : name.toUpperCase();
+  document.getElementById('jobSub').textContent = sub;
+}
+
+function addJob() {
+  const name = prompt('Job name — what do you call this one?');
+  if (!name) return;
+  const id = nextId++;
+  jobs.unshift({id, name, wo:'WO #'+(2240+id), status:'draft', quip:'freshly opened · toodles is watching'});
+  selJob(jobs[0].id);
+  renderJobs();
+}
+
+function nukeAll() {
+  if (!confirm('Nuke everything? Toodles will forget. She will be okay. She is always okay.')) return;
+  jobs.length = 0; nextId = 1; currentJob = null;
+  document.getElementById('jobTitle').innerHTML = 'NO JOBS — <em>START ONE</em>';
+  document.getElementById('jobSub').textContent = 'the pile is empty · toodles is waiting · she has nowhere to be';
+  renderJobs();
+}
+
+/* ACCESS */
+function unlock() {
+  const k = document.getElementById('codeInput').value.trim();
+  if (!k) { toast('KEY REQUIRED','y'); return; }
+  unlocked = true; _key = k;
+  document.getElementById('accessStatus').textContent = 'unlocked · ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' · she is with you';
+  document.getElementById('accessStatus').classList.add('on');
+  document.getElementById('makeBtn').disabled = false;
+  document.getElementById('makeBtn2').disabled = false;
+  document.getElementById('revBtn').disabled = false;
+  toast('TOODLES IS READY','p');
+}
+document.getElementById('codeInput').addEventListener('keydown', e => { if(e.key==='Enter') unlock(); });
+
+/* FIELDS */
+function syncLabel() {
+  const v = document.getElementById('jobLabel').value.trim();
+  if (!v) return;
+  setHeader(v, currentJob ? jobs.find(x=>x.id===currentJob)?.wo + ' · toodles is watching' : 'new job · toodles is paying attention');
+  if (currentJob) { const j = jobs.find(x=>x.id===currentJob); if(j) { j.name=v; renderJobs(); } }
+}
+function tp(el) { el.classList.toggle('on'); }
+function pills() { return [...document.querySelectorAll('.pill.on')].map(p=>p.textContent).join(', '); }
+
+function clearFields() {
+  ['jobLabel','complaint','onsite','labor','followup','revInput'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.pill.on').forEach(p=>p.classList.remove('on'));
+  const nb = document.getElementById('noteBox');
+  nb.textContent = 'Toodles is ready. She\'s been ready. She was born ready, in a van, outside a property management office, during a water main break.\n\nFill in some fields and hit "Make Note."';
+  nb.classList.remove('has');
+  document.getElementById('copyBtn').style.display='none';
+  document.getElementById('finalBtn').style.display='none';
+  document.getElementById('outputSub').textContent='cleared · ready when you are';
+  noteGenerated=false; history.length=0;
+}
+
+/* API */
+async function callAPI(msg) {
+  history.push({role:'user',content:msg});
+  const r = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':_key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      system:`You are a professional work order note writer for a field maintenance technician.
+Write clear, professional notes suitable for a property management system.
+Tone: professional but human. Never stiff. Never corporate. Never sycophantic.
+Format: paragraph form only. No bullet points. No headers. No subject lines. No sign-off.
+Length: 80–140 words unless the situation genuinely requires more.
+Structure: complaint summary → what was found/done → labor context if provided → follow-up if any.
+Write ONLY the note body. Nothing else. No preamble. No commentary.`,
+      messages:history
+    })
+  });
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const d = await r.json();
+  const t = d.content?.[0]?.text||'[error]';
+  history.push({role:'assistant',content:t});
+  return t;
+}
+
+/* MAKE NOTE */
+async function makeNote() {
+  if(!unlocked) return;
+  const c = document.getElementById('complaint').value.trim();
+  const o = document.getElementById('onsite').value.trim();
+  if(!c&&!o){ toast('FILL SOMETHING IN','y'); return; }
+
+  history.length=0; setLoading(true);
+  const prompt = [
+    document.getElementById('jobLabel').value.trim()  && `Job: ${document.getElementById('jobLabel').value.trim()}`,
+    c && `Complaint/WO: ${c}`,
+    o && `What happened: ${o}`,
+    (pills()||document.getElementById('labor').value.trim()) && `Labor factors: ${[pills(),document.getElementById('labor').value.trim()].filter(Boolean).join('. ')}`,
+    document.getElementById('followup').value.trim() && `Follow-up: ${document.getElementById('followup').value.trim()}`,
+  ].filter(Boolean).join('\n');
+
+  try {
+    const note = await callAPI(prompt);
+    const nb = document.getElementById('noteBox');
+    nb.textContent = note; nb.classList.add('has');
+    noteGenerated=true; noteCount++;
+    document.getElementById('copyBtn').style.display='';
+    document.getElementById('finalBtn').style.display='';
+    document.getElementById('outputSub').textContent='✦ toodles reached into the bag · ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    renderJobs();
+    toast('NOTE READY','g');
+  } catch(e) {
+    triggerFault(e.message);
+  } finally { setLoading(false); }
+}
+
+/* REVISE */
+async function revise() {
+  if(!unlocked||!noteGenerated) return;
+  const rv = document.getElementById('revInput').value.trim();
+  if(!rv) return;
+  setLoading(true);
+  try {
+    const note = await callAPI(rv);
+    document.getElementById('noteBox').textContent=note;
+    document.getElementById('revInput').value='';
+    document.getElementById('outputSub').textContent='revised · she took notes on your notes';
+  } catch(e){ triggerFault(e.message); }
+  finally{ setLoading(false); }
+}
+document.getElementById('revInput').addEventListener('keydown',e=>{if(e.key==='Enter')revise();});
+
+/* COPY / FINAL */
+function copyNote() {
+  navigator.clipboard?.writeText(document.getElementById('noteBox').textContent);
+  toast('COPIED.','y');
+}
+function markFinal() {
+  if(currentJob){ const j=jobs.find(x=>x.id===currentJob); if(j) j.status='final'; }
+  document.getElementById('finalBtn').textContent='✓ Final';
+  document.getElementById('finalBtn').disabled=true;
+  renderJobs(); toast('MARKED FINAL','g');
+}
+
+/* UTILS */
+function setLoading(on) {
+  document.getElementById('dots').classList.toggle('on',on);
+  document.getElementById('makeBtn').disabled = on||!unlocked;
+  document.getElementById('makeBtn2').disabled = on||!unlocked;
+  var lbl = document.getElementById('makeBtn2Label');
+  if(lbl) lbl.textContent = on ? "SHE'S THINKING..." : 'OH TOODLES!';
+  document.getElementById('revBtn').disabled  = on||!unlocked;
+  if(on) document.getElementById('outputSub').textContent = LOAD_LINES[Math.floor(Math.random()*LOAD_LINES.length)];
+}
+
+function toast(msg,type) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+/* ============================================================
+   GFCI — FAULT / RESET
+   ============================================================ */
+let faulted = false;
+let matrixRain = null;
+
+function triggerFault(msg) {
+  faulted = true;
+  document.body.classList.add('fault');
+  var plate = document.getElementById('fpPlate');
+  if(plate){ plate.classList.remove('normal'); plate.classList.add('tripped'); }
+  document.getElementById('gfciStatus').textContent = 'fault · hit reset';
+
+  const nb = document.getElementById('noteBox');
+  nb.classList.remove('has');
+
+  const errLines = [
+    '⚠ VAULT-TEC WARNING SYSTEM ⚠',
+    '',
+    msg || 'UNKNOWN ERROR',
+    '',
+    '> CIRCUIT TRIPPED.',
+    '> TOODLES IS IN THE BAG.',
+    '> PRESS RESET TO REACH HER.',
+    '',
+    'WAR. WAR NEVER CHANGES.',
+    'BUT TOODLES ALWAYS COMES BACK.',
+  ];
+  nb.textContent = errLines.join('\n');
+
+  document.getElementById('outputSub').textContent = 'fault · toodles is in safe mode · hit RESET on the GFCI';
+
+  startMatrixRain();
+
+  const topInner = document.querySelector('.chyron-top-inner');
+  if(topInner) {
+    topInner._orig = topInner.innerHTML;
+    topInner.innerHTML = [
+      '⚠ VAULT-TEC SYSTEMS ALERT','RADIATION LEVEL ELEVATED','PLEASE STAND BY',
+      'SEEK NEAREST VAULT IMMEDIATELY','TOODLES IS IN SAFE MODE','CIRCUIT TRIPPED',
+      'FAULT DETECTED','DO NOT ATTEMPT TO REPAIR YOURSELF','SHE IS WAITING IN THE DARK',
+      'PRESS RESET TO RESTORE POWER','WAR. WAR NEVER CHANGES.','BUT TOODLES DOES',
+      '⚠ VAULT-TEC SYSTEMS ALERT','RADIATION LEVEL ELEVATED','PLEASE STAND BY',
+      'SEEK NEAREST VAULT IMMEDIATELY','TOODLES IS IN SAFE MODE','CIRCUIT TRIPPED',
+      'FAULT DETECTED','DO NOT ATTEMPT TO REPAIR YOURSELF','SHE IS WAITING IN THE DARK',
+      'PRESS RESET TO RESTORE POWER','WAR. WAR NEVER CHANGES.','BUT TOODLES DOES',
+    ].map(t=>`${t} <span class="sep">●</span> `).join('');
+  }
+}
+
+function gfciTrip() {
+  console.log('GFCI tripped, faulted=', faulted);
+  if (!faulted) {
+    triggerFault('GFCI TEST — manual trip');
+  } else {
+    resetFault();
+  }
+}
+
+/* make it globally accessible in case onclick has scope issues */
+window.gfciTrip = gfciTrip;
+window.makeNote = makeNote;
+window.revise = revise;
+window.copyNote = copyNote;
+window.markFinal = markFinal;
+window.unlock = unlock;
+window.addJob = addJob;
+window.nukeAll = nukeAll;
+window.clearFields = clearFields;
+window.tp = tp;
+window.selJob = selJob;
+
+function resetFault() {
+  faulted = false;
+  document.body.classList.remove('fault');
+  var plate = document.getElementById('fpPlate');
+  if(plate){ plate.classList.remove('tripped'); plate.classList.add('normal'); }
+  document.getElementById('gfciStatus').textContent = 'circuit protected';
+
+  stopMatrixRain();
+
+  const nb = document.getElementById('noteBox');
+  nb.textContent = 'fill in the fields.\nhit Make Note.\nnobody will ask questions.';
+  nb.classList.remove('has');
+  document.getElementById('outputSub').textContent = 'power restored · toodles is back · she never left';
+
+  const topInner = document.querySelector('.chyron-top-inner');
+  if(topInner && topInner._orig) topInner.innerHTML = topInner._orig;
+
+  toast('POWER RESTORED', 'g');
+}
+
+function startMatrixRain() {
+  const existing = document.getElementById('matrixCanvas');
+  if (existing) existing.remove();
+  const canvas = document.createElement('canvas');
+  canvas.id = 'matrixCanvas';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:8998;opacity:0.07;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  /* Pip-Boy vault static — sparse noise, not matrix rain */
+  matrixRain = setInterval(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const count = 180;
+    for(let i = 0; i < count; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const w = Math.random() * 3 + 1;
+      const h = Math.random() * 2 + 1;
+      const a = Math.random() * 0.6 + 0.1;
+      ctx.fillStyle = `rgba(90,245,120,${a})`;
+      ctx.fillRect(x, y, w, h);
+    }
+  }, 80);
+}
+
+function stopMatrixRain() {
+  if (matrixRain) { clearInterval(matrixRain); matrixRain = null; }
+  const canvas = document.getElementById('matrixCanvas');
+  if (canvas) canvas.remove();
+}
+</script>
+</body>
+</html>

@@ -53,3 +53,11 @@ test("app page embedded script is valid browser JavaScript", () => {
   assert.ok(script);
   assert.doesNotThrow(() => new Function(script));
 });
+
+test("app page uses Toodles backend wiring instead of mockup API", () => {
+  const html = appPageHtml();
+  assert.match(html, /TOODLES/);
+  assert.match(html, /\/api\/draft/);
+  assert.match(html, /\/api\/refine/);
+  assert.doesNotMatch(html, /api\.anthropic\.com/);
+});
