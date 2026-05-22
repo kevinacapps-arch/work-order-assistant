@@ -615,7 +615,7 @@ export function appPageHtml() {
         <span>Code is kept for this tab session only.</span>
         <button id="clear-secret" class="danger">Lock</button>
       </div>
-      <div class="access-status" id="access-status"></div>
+      <div class="access-status" id="access-status" aria-live="polite"></div>
     </div>
   </div>
 
@@ -637,7 +637,7 @@ export function appPageHtml() {
           <h2>Field Facts</h2>
           <div class="panel-subtitle">Raw notes, complaint, labor reason</div>
         </div>
-        <div class="status" id="status"></div>
+        <div class="status" id="status" aria-live="polite"></div>
       </div>
 
       <div class="fields">
@@ -765,6 +765,10 @@ export function appPageHtml() {
         event.preventDefault();
         saveAccessCode();
       }
+    });
+
+    els.unlock.addEventListener("pointerdown", () => {
+      if (els.accessCode.value.trim()) setAccessStatus("Starting check...");
     });
 
     els.unlock.addEventListener("click", () => {
@@ -1024,14 +1028,22 @@ export function appPageHtml() {
     }
 
     async function checkAccessCode(secret) {
-      const response = await fetch("/api/auth-check", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-App-Secret": secret
-        },
-        body: "{}"
-      });
+      const slowNotice = window.setTimeout(() => {
+        setAccessStatus("Still checking. Server may be waking up.");
+      }, 8000);
+      let response;
+      try {
+        response = await fetch("/api/auth-check", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-App-Secret": secret
+          },
+          body: "{}"
+        });
+      } finally {
+        window.clearTimeout(slowNotice);
+      }
       if (response.ok) return;
       if (response.status === 401) {
         throw new Error("That code did not match. Check the APP_SHARED_SECRET value in Render.");
