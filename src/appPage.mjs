@@ -603,7 +603,7 @@ export function appPageHtml() {
   <div class="access-shell" id="access-shell">
     <div class="access-card">
       <h2>Enter Access Code</h2>
-      <p>This keeps the note generator private and protects your API usage. Save it on trusted devices only.</p>
+      <p>Enter the code for this session. Keep it to trusted devices.</p>
       <div class="access-row">
         <div>
           <label for="access-code">Access Code</label>
