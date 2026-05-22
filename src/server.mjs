@@ -29,7 +29,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && path === "/api") {
       return sendJson(res, 200, {
         name: "work-order-assistant",
-        endpoints: ["/", "/app", "/test", "/api/draft", "/api/refine", "/api/batch", "/health"]
+        endpoints: ["/", "/app", "/test", "/api/auth-check", "/api/draft", "/api/refine", "/api/batch", "/health"]
       });
     }
 
@@ -50,6 +50,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     authorize(req);
+
+    if (path === "/api/auth-check") {
+      return sendJson(res, 200, { ok: true });
+    }
+
     const body = await readJson(req);
 
     if (path === "/api/draft") {

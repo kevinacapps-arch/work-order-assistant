@@ -150,6 +150,18 @@ export function appPageHtml() {
       font-size: 13px;
     }
 
+    .access-status {
+      margin-top: 10px;
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .access-status.error {
+      color: var(--warn);
+    }
+
     .hidden {
       display: none !important;
     }
@@ -376,6 +388,7 @@ export function appPageHtml() {
     }
 
     button {
+      position: relative;
       min-height: 38px;
       border: 1px solid var(--line-strong);
       border-radius: 10px;
@@ -414,6 +427,24 @@ export function appPageHtml() {
       opacity: 0.62;
     }
 
+    button.busy {
+      padding-left: 34px;
+    }
+
+    button.busy::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      width: 13px;
+      height: 13px;
+      margin-top: -7px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 700ms linear infinite;
+    }
+
     .actions {
       display: flex;
       gap: 8px;
@@ -422,6 +453,7 @@ export function appPageHtml() {
     }
 
     .note {
+      position: relative;
       min-height: 290px;
       white-space: pre-wrap;
       border: 1px solid #465060;
@@ -432,6 +464,24 @@ export function appPageHtml() {
       padding: 20px 22px;
       font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .note.loading {
+      overflow: hidden;
+      color: #dbe8ff;
+    }
+
+    .note.loading::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 16px;
+      height: 3px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, transparent, var(--accent-2), transparent);
+      animation: sweep 1.15s ease-in-out infinite;
     }
 
     .labor-helper {
@@ -481,6 +531,28 @@ export function appPageHtml() {
 
     .revision {
       margin-top: 14px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes sweep {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0.35;
+      }
+
+      45% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(100%);
+        opacity: 0.35;
+      }
     }
 
     @media (max-width: 1080px) {
@@ -543,6 +615,7 @@ export function appPageHtml() {
         <span>Code is kept for this tab session only.</span>
         <button id="clear-secret" class="danger">Lock</button>
       </div>
+      <div class="access-status" id="access-status"></div>
     </div>
   </div>
 
@@ -651,6 +724,7 @@ export function appPageHtml() {
       accessCode: document.getElementById("access-code"),
       unlock: document.getElementById("unlock"),
       clearSecret: document.getElementById("clear-secret"),
+      accessStatus: document.getElementById("access-status"),
       workspace: document.getElementById("workspace"),
       newJob: document.getElementById("new-job"),
       clearDone: document.getElementById("clear-done"),
@@ -683,7 +757,7 @@ export function appPageHtml() {
 
     els.accessCode.addEventListener("input", () => {
       renderFields();
-      if (hasSecret()) setStatus("");
+      setAccessStatus("");
     });
 
     els.accessCode.addEventListener("keydown", (event) => {
@@ -693,7 +767,9 @@ export function appPageHtml() {
       }
     });
 
-    els.unlock.addEventListener("click", saveAccessCode);
+    els.unlock.addEventListener("click", () => {
+      saveAccessCode();
+    });
 
     els.clearSecret.addEventListener("click", () => {
       sessionStorage.removeItem(secretKey);
@@ -764,7 +840,8 @@ export function appPageHtml() {
       const job = requireJob();
       if (!job) return;
       if (!requireSecret()) return;
-      await withBusy(els.makeNote, async () => {
+      await withBusy(els.makeNote, "Making...", "Writing note...", async () => {
+        setOutputWorking("Writing note. This can take a few seconds.");
         const json = await postJson("/api/draft", packetFromJob(job));
         job.draftNote = json.draftNote || "";
         job.status = "draft";
@@ -788,7 +865,8 @@ export function appPageHtml() {
         setStatus("Add revision notes first.", true);
         return;
       }
-      await withBusy(els.reviseNote, async () => {
+      await withBusy(els.reviseNote, "Revising...", "Reworking note...", async () => {
+        setOutputWorking("Reworking note with your correction.");
         const json = await postJson("/api/refine", {
           packet: packetFromJob(job),
           currentNote: job.finalNote || job.draftNote,
@@ -907,7 +985,7 @@ export function appPageHtml() {
     }
 
     function hasSecret() {
-      return Boolean((els.accessCode.value.trim() || sessionStorage.getItem(secretKey) || "").trim());
+      return Boolean((sessionStorage.getItem(secretKey) || "").trim());
     }
 
     function requireSecret() {
@@ -919,18 +997,47 @@ export function appPageHtml() {
       return false;
     }
 
-    function saveAccessCode() {
+    async function saveAccessCode() {
       const value = els.accessCode.value.trim();
       if (!value) {
         sessionStorage.removeItem(secretKey);
         els.accessCode.value = "";
+        setAccessStatus("Enter the access code first.", true);
         render();
         return;
       }
-      sessionStorage.setItem(secretKey, value);
-      els.accessCode.value = value;
-      render();
-      setStatus("Access code accepted for this session.");
+      await withBusy(els.unlock, "Checking...", "Checking access code...", async () => {
+        setAccessStatus("Checking code...");
+        try {
+          await checkAccessCode(value);
+          sessionStorage.setItem(secretKey, value);
+          els.accessCode.value = value;
+          render();
+          setStatus("Access code accepted for this session.");
+        } catch (error) {
+          sessionStorage.removeItem(secretKey);
+          els.accessCode.value = value;
+          render();
+          setAccessStatus(error.message, true);
+        }
+      });
+    }
+
+    async function checkAccessCode(secret) {
+      const response = await fetch("/api/auth-check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-App-Secret": secret
+        },
+        body: "{}"
+      });
+      if (response.ok) return;
+      if (response.status === 401) {
+        throw new Error("That code did not match. Check the APP_SHARED_SECRET value in Render.");
+      }
+      const json = await response.json().catch(() => ({}));
+      throw new Error(json.error || "Could not check code. Try again.");
     }
 
     function packetFromJob(job) {
@@ -962,17 +1069,28 @@ export function appPageHtml() {
       return json;
     }
 
-    async function withBusy(button, fn) {
+    async function withBusy(button, busyLabel, statusLabel, fn) {
+      const label = button.textContent;
       button.disabled = true;
-      setStatus("Working...");
+      button.classList.add("busy");
+      button.textContent = busyLabel || "Working...";
+      setStatus(statusLabel || "Working...");
       try {
         await fn();
       } catch (error) {
         setStatus(error.message, true);
       } finally {
         button.disabled = false;
+        button.classList.remove("busy");
+        button.textContent = label;
         renderFields();
+        renderOutput();
       }
+    }
+
+    function setOutputWorking(message) {
+      els.note.className = "note loading";
+      els.note.textContent = message;
     }
 
     async function copyText(text) {
@@ -1000,6 +1118,11 @@ export function appPageHtml() {
     function setStatus(message, isError) {
       els.status.textContent = message || "";
       els.status.className = "status" + (isError ? " error" : "");
+    }
+
+    function setAccessStatus(message, isError) {
+      els.accessStatus.textContent = message || "";
+      els.accessStatus.className = "access-status" + (isError ? " error" : "");
     }
 
     function formatDate(value) {
