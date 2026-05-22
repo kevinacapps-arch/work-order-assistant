@@ -1,4 +1,5 @@
 import http from "node:http";
+import https from "node:https";
 import { appPageHtml } from "./appPage.mjs";
 import { loadEnvFile } from "./env.mjs";
 import { testPageHtml } from "./testPage.mjs";
@@ -9,6 +10,7 @@ loadEnvFile();
 const PORT = Number(process.env.PORT || 8787);
 const HOST = process.env.HOST || "0.0.0.0";
 const SHARED_SECRET = process.env.APP_SHARED_SECRET || "";
+const PROXY_TARGET = process.env.PROXY_TARGET || "";
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -19,7 +21,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && path === "/health") {
-      return sendJson(res, 200, { ok: true });
+      return sendJson(res, 200, { ok: true, proxy: Boolean(PROXY_TARGET) });
+    }
+
+    if (PROXY_TARGET) {
+      return proxyRequest(req, res);
     }
 
     if (req.method === "GET" && path === "/") {
@@ -80,6 +86,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`Work order assistant listening on http://${HOST}:${PORT}`);
+  if (PROXY_TARGET) console.log(`Proxying requests to ${PROXY_TARGET}`);
 });
 
 function authorize(req) {
@@ -117,6 +124,43 @@ function readJson(req) {
       }
     });
     req.on("error", reject);
+  });
+}
+
+function proxyRequest(req, res) {
+  return new Promise((resolve) => {
+    const upstreamUrl = new URL(req.url || "/", PROXY_TARGET);
+    const client = upstreamUrl.protocol === "https:" ? https : http;
+    const headers = { ...req.headers, host: upstreamUrl.host };
+
+    delete headers.connection;
+    delete headers["keep-alive"];
+    delete headers["proxy-authenticate"];
+    delete headers["proxy-authorization"];
+    delete headers.te;
+    delete headers.trailer;
+    delete headers["transfer-encoding"];
+    delete headers.upgrade;
+
+    const upstream = client.request(
+      upstreamUrl,
+      {
+        method: req.method,
+        headers
+      },
+      (upstreamRes) => {
+        res.writeHead(upstreamRes.statusCode || 502, upstreamRes.headers);
+        upstreamRes.pipe(res);
+        upstreamRes.on("end", resolve);
+      }
+    );
+
+    upstream.on("error", (error) => {
+      sendJson(res, 502, { error: error.message || "Proxy request failed." });
+      resolve();
+    });
+
+    req.pipe(upstream);
   });
 }
 
