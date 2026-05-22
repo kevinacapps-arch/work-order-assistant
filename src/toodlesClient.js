@@ -543,7 +543,14 @@ function setHeader(name, sub) {
   } else {
     byId("jobTitle").textContent = String(name || "Untitled job").toUpperCase();
   }
-  byId("jobSub").textContent = sub || "";
+  byId("jobSub").innerHTML = withWatchingDot(sub || "");
+}
+
+function withWatchingDot(value) {
+  return escapeHtml(value).replaceAll(
+    "toodles is watching",
+    '<span class="watching-dot" aria-hidden="true"></span>toodles is watching'
+  );
 }
 
 function escapeHtml(value) {
