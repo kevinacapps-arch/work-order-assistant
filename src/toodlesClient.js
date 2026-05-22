@@ -53,6 +53,7 @@ document.addEventListener("focusout", (event) => {
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
+  setAccessState(false);
   text("topDate", new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -250,10 +251,12 @@ async function unlock(fromSession) {
     await postJson("/api/auth-check", {}, code);
     sessionStorage.setItem(secretKey, code);
     unlocked = true;
+    setAccessState(true);
     setAccessStatus("unlocked · " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + " · she is with you", false, true);
     if (!fromSession) toast("TOODLES IS READY", "p");
   } catch (error) {
     unlocked = false;
+    setAccessState(false);
     sessionStorage.removeItem(secretKey);
     setAccessStatus(error.message || "code did not work", true);
     toast("CODE DID NOT WORK", "y");
@@ -424,6 +427,7 @@ async function postJson(url, body, overrideSecret) {
   if (!response.ok) {
     if (response.status === 401) {
       unlocked = false;
+      setAccessState(false);
       sessionStorage.removeItem(secretKey);
       updateButtons();
       throw new Error("code did not match · check the access code");
@@ -452,6 +456,11 @@ function setAccessStatus(message, isError, isOn) {
   const status = byId("accessStatus");
   status.textContent = message;
   status.classList.toggle("on", Boolean(isOn) || (!isError && unlocked));
+}
+
+function setAccessState(isUnlocked) {
+  document.body.classList.toggle("locked", !isUnlocked);
+  document.body.classList.toggle("unlocked", isUnlocked);
 }
 
 async function copyText(value) {
