@@ -524,11 +524,11 @@ export function appPageHtml() {
       <span>Messy job facts in. Clean work note out.</span>
     </div>
     <div class="topbar">
-      <button id="new-job" class="primary">New Job</button>
+      <button id="new-job" class="primary" disabled>New Job</button>
     </div>
   </header>
 
-  <div class="access-shell hidden" id="access-shell">
+  <div class="access-shell" id="access-shell">
     <div class="access-card">
       <h2>Enter Access Code</h2>
       <p>This keeps the note generator private and protects your API usage. Save it on trusted devices only.</p>
@@ -540,13 +540,13 @@ export function appPageHtml() {
         <button id="unlock" class="primary">Unlock</button>
       </div>
       <div class="access-actions">
-        <span>Code is stored in this browser only.</span>
-        <button id="clear-secret" class="danger">Forget Saved Code</button>
+        <span>Code is kept for this tab session only.</span>
+        <button id="clear-secret" class="danger">Lock</button>
       </div>
     </div>
   </div>
 
-  <main id="workspace">
+  <main id="workspace" class="hidden">
     <aside>
       <div class="panel-head">
         <div class="panel-title">
@@ -641,7 +641,7 @@ export function appPageHtml() {
 
   <script>
     const storageKey = "wo-ui-jobs-v1";
-    const secretKey = "wo-ui-secret-v1";
+    const secretKey = "wo-ui-session-secret-v1";
     const fields = ["label", "sourceText", "fieldNotes", "laborNotes", "followUp"];
     let jobs = loadJobs();
     let activeId = jobs[0] ? jobs[0].id : null;
@@ -679,7 +679,7 @@ export function appPageHtml() {
       });
     }
 
-    els.accessCode.value = localStorage.getItem(secretKey) || "";
+    els.accessCode.value = sessionStorage.getItem(secretKey) || "";
 
     els.accessCode.addEventListener("input", () => {
       renderFields();
@@ -696,7 +696,7 @@ export function appPageHtml() {
     els.unlock.addEventListener("click", saveAccessCode);
 
     els.clearSecret.addEventListener("click", () => {
-      localStorage.removeItem(secretKey);
+      sessionStorage.removeItem(secretKey);
       els.accessCode.value = "";
       render();
       els.accessCode.focus();
@@ -907,7 +907,7 @@ export function appPageHtml() {
     }
 
     function hasSecret() {
-      return Boolean((els.accessCode.value.trim() || localStorage.getItem(secretKey) || "").trim());
+      return Boolean((els.accessCode.value.trim() || sessionStorage.getItem(secretKey) || "").trim());
     }
 
     function requireSecret() {
@@ -922,15 +922,15 @@ export function appPageHtml() {
     function saveAccessCode() {
       const value = els.accessCode.value.trim();
       if (!value) {
-        localStorage.removeItem(secretKey);
+        sessionStorage.removeItem(secretKey);
         els.accessCode.value = "";
         render();
         return;
       }
-      localStorage.setItem(secretKey, value);
+      sessionStorage.setItem(secretKey, value);
       els.accessCode.value = value;
       render();
-      setStatus("Access code saved on this device.");
+      setStatus("Access code accepted for this session.");
     }
 
     function packetFromJob(job) {
@@ -946,7 +946,7 @@ export function appPageHtml() {
     }
 
     async function postJson(url, body) {
-      const secret = els.accessCode.value.trim() || localStorage.getItem(secretKey) || "";
+      const secret = els.accessCode.value.trim() || sessionStorage.getItem(secretKey) || "";
       const response = await fetch(url, {
         method: "POST",
         headers: {
