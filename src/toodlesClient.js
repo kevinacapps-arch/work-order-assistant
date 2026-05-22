@@ -29,7 +29,7 @@ const LOAD_LINES = [
 
 let jobs = loadJobs();
 let currentJob = jobs[0] ? jobs[0].id : null;
-let unlocked = Boolean(sessionStorage.getItem(secretKey));
+let unlocked = false;
 let busy = false;
 let noteCount = Number(sessionStorage.getItem("toodles-note-count") || "0");
 let faulted = false;
