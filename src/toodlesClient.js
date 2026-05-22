@@ -77,8 +77,7 @@ function init() {
   const savedSecret = sessionStorage.getItem(secretKey) || "";
   if (savedSecret) {
     byId("codeInput").value = savedSecret;
-    setAccessStatus("checking saved code...", false);
-    unlock(true);
+    setAccessStatus("code remembered for this tab · press unlock", false);
   } else {
     setAccessStatus("locked · toodles is waiting · she is patient · she has seen things", false);
   }
