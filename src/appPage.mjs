@@ -4,7 +4,7 @@ export function appPageHtml() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Foreman Notes</title>
+  <title>Toodles</title>
   <style>
     :root {
       color-scheme: dark;
@@ -592,8 +592,8 @@ export function appPageHtml() {
 <body>
   <header>
     <div class="brand">
-      <h1>Foreman Notes</h1>
-      <span>Messy job facts in. Clean work note out.</span>
+      <h1>Toodles</h1>
+      <span>A helper for those great with tools and terrible with keyboards.</span>
     </div>
     <div class="topbar">
       <button id="new-job" class="primary" disabled>New Job</button>
