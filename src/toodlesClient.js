@@ -162,7 +162,7 @@ function renderFields() {
     pill.classList.toggle("on", (job.laborTags || []).includes(pill.textContent.trim()));
   });
 
-  setHeader(job.name || "Untitled job", (job.wo || formatDate(job.createdAt)) + " · " + (job.status || "draft") + " · toodles is on it");
+  setHeader(job.name || "Untitled job", (job.wo || formatDate(job.createdAt)) + " · " + (job.status || "draft") + " · toodles is watching");
 }
 
 function renderOutput() {
