@@ -116,7 +116,7 @@ function renderJobs() {
 
     const wo = document.createElement("div");
     wo.className = "job-wo";
-    wo.textContent = job.wo || formatDate(job.createdAt);
+    wo.textContent = jobMeta(job);
 
     const quip = document.createElement("div");
     quip.className = "job-quip";
@@ -162,7 +162,7 @@ function renderFields() {
     pill.classList.toggle("on", (job.laborTags || []).includes(pill.textContent.trim()));
   });
 
-  setHeader(job.name || "Untitled job", (job.wo || formatDate(job.createdAt)) + " · " + (job.status || "draft") + " · toodles is watching");
+  setHeader(job.name || "Untitled job", jobMeta(job) + " · toodles is watching");
 }
 
 function renderOutput() {
@@ -269,7 +269,7 @@ function syncLabel() {
   saveActiveFromFields();
   const job = activeJob();
   if (!job) return;
-  setHeader(job.name || "Untitled job", (job.wo || formatDate(job.createdAt)) + " · toodles is watching");
+  setHeader(job.name || "Untitled job", jobMeta(job) + " · toodles is watching");
   renderJobs();
 }
 
@@ -477,7 +477,7 @@ function createJob(name) {
     id: crypto.randomUUID ? crypto.randomUUID() : String(now.getTime()),
     createdAt: now.toISOString(),
     name,
-    wo: "WO #" + String(2200 + Math.floor(Math.random() * 800)),
+    wo: "",
     status: "draft",
     quip: "freshly opened · toodles is watching",
     sourceText: "",
@@ -519,7 +519,7 @@ function normalizeJob(raw, index) {
     id: String(raw.id || raw.packetId || Date.now() + "-" + index),
     createdAt,
     name,
-    wo: raw.wo || formatDate(createdAt),
+    wo: looksLikeGeneratedWo(raw.wo) ? "" : raw.wo || "",
     status: raw.status || "draft",
     quip: raw.quip || "stored locally · toodles remembers this browser",
     sourceText: raw.sourceText || raw.complaint || "",
@@ -566,6 +566,14 @@ function escapeHtml(value) {
 function formatDate(value) {
   if (!value) return "";
   return new Date(value).toLocaleDateString([], { month: "short", day: "numeric" });
+}
+
+function jobMeta(job) {
+  return [job.status || "draft", formatDate(job.createdAt)].filter(Boolean).join(" · ");
+}
+
+function looksLikeGeneratedWo(value) {
+  return /^WO\s+#\d{3,}$/i.test(String(value || "").trim());
 }
 
 function byId(id) {

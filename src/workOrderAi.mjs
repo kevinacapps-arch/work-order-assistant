@@ -70,6 +70,13 @@ export async function batchDraft(rawPackets) {
     throw error;
   }
 
+  const maxPackets = numberFromEnv(process.env.MAX_BATCH_PACKETS, 10);
+  if (rawPackets.length > maxPackets) {
+    const error = new Error(`Batch request limit is ${maxPackets} packets.`);
+    error.statusCode = 413;
+    throw error;
+  }
+
   const results = [];
   for (const packet of rawPackets) {
     try {
@@ -90,6 +97,7 @@ async function callOpenAI(userPrompt) {
   const apiKey = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_MODEL || "gpt-5.4-mini";
   const reasoningEffort = process.env.OPENAI_REASONING_EFFORT || "low";
+  const timeoutMs = numberFromEnv(process.env.OPENAI_TIMEOUT_MS, 60_000);
   if (!apiKey) {
     const error = new Error("OPENAI_API_KEY is not set.");
     error.statusCode = 500;
@@ -107,14 +115,29 @@ async function callOpenAI(userPrompt) {
     body.reasoning = { effort: reasoningEffort };
   }
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let response;
+  try {
+    response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+  } catch (error) {
+    if (error.name === "AbortError") {
+      const timeoutError = new Error("OpenAI request timed out.");
+      timeoutError.statusCode = 504;
+      throw timeoutError;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   const json = await response.json().catch(() => null);
   if (!response.ok) {

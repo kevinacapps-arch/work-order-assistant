@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { appPageHtml } from "../src/appPage.mjs";
 import { buildPacket, dedupeLines, limitText, normalizeText } from "../src/sanitize.mjs";
-import { extractOutputText } from "../src/workOrderAi.mjs";
+import { batchDraft, extractOutputText } from "../src/workOrderAi.mjs";
 
 test("normalizeText cleans spacing and line endings", () => {
   assert.equal(normalizeText("  a\tb\r\n\r\n\r\n\r\nc  "), "a b\n\n\nc");
@@ -60,4 +60,21 @@ test("app page uses Toodles backend wiring instead of mockup API", () => {
   assert.match(html, /\/api\/draft/);
   assert.match(html, /\/api\/refine/);
   assert.doesNotMatch(html, /api\.anthropic\.com/);
+  assert.doesNotMatch(html, /one bucket per work order/i);
+  assert.doesNotMatch(html, /FOR THE OFFICE/);
+  assert.doesNotMatch(html, /WO #\d/);
+});
+
+test("batch requests are capped before model calls", async () => {
+  const previous = process.env.MAX_BATCH_PACKETS;
+  process.env.MAX_BATCH_PACKETS = "2";
+  try {
+    await assert.rejects(
+      () => batchDraft([{ sourceText: "a" }, { sourceText: "b" }, { sourceText: "c" }]),
+      /Batch request limit is 2 packets/
+    );
+  } finally {
+    if (previous === undefined) delete process.env.MAX_BATCH_PACKETS;
+    else process.env.MAX_BATCH_PACKETS = previous;
+  }
 });

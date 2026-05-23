@@ -11,6 +11,10 @@ const PORT = Number(process.env.PORT || 8787);
 const HOST = process.env.HOST || "0.0.0.0";
 const SHARED_SECRET = process.env.APP_SHARED_SECRET || "";
 const PROXY_TARGET = process.env.PROXY_TARGET || "";
+const RATE_LIMIT_WINDOW_MS = numberFromEnv(process.env.API_RATE_LIMIT_WINDOW_MS, 60_000);
+const RATE_LIMIT_MAX_REQUESTS = numberFromEnv(process.env.API_RATE_LIMIT_MAX_REQUESTS, 60);
+const MAX_BODY_BYTES = numberFromEnv(process.env.MAX_BODY_BYTES, 2_000_000);
+const rateBuckets = new Map();
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -25,6 +29,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (PROXY_TARGET) {
+      if (declaredBodySize(req) > MAX_BODY_BYTES) {
+        return sendJson(res, 413, { error: "Request body too large." });
+      }
+      if (path.startsWith("/api/") && req.method === "POST") {
+        enforceRateLimit(req);
+      }
       return proxyRequest(req, res);
     }
 
@@ -55,6 +65,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 405, { error: "Use POST for API endpoints." });
     }
 
+    enforceRateLimit(req);
     authorize(req);
 
     if (path === "/api/auth-check") {
@@ -102,12 +113,46 @@ function authorize(req) {
   }
 }
 
+function enforceRateLimit(req) {
+  if (!RATE_LIMIT_MAX_REQUESTS || RATE_LIMIT_MAX_REQUESTS < 1) return;
+
+  const now = Date.now();
+  const key = clientIp(req);
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const hits = (rateBuckets.get(key) || []).filter((hit) => hit > cutoff);
+
+  if (hits.length >= RATE_LIMIT_MAX_REQUESTS) {
+    const error = new Error("Too many requests. Wait a minute and try again.");
+    error.statusCode = 429;
+    throw error;
+  }
+
+  hits.push(now);
+  rateBuckets.set(key, hits);
+
+  for (const [bucketKey, bucketHits] of rateBuckets) {
+    const kept = bucketHits.filter((hit) => hit > cutoff);
+    if (kept.length) rateBuckets.set(bucketKey, kept);
+    else rateBuckets.delete(bucketKey);
+  }
+}
+
+function clientIp(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return forwarded || req.socket.remoteAddress || "unknown";
+}
+
+function numberFromEnv(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
 function readJson(req) {
   return new Promise((resolve, reject) => {
     let raw = "";
     req.on("data", (chunk) => {
       raw += chunk;
-      if (raw.length > 2_000_000) {
+      if (raw.length > MAX_BODY_BYTES) {
         const error = new Error("Request body too large.");
         error.statusCode = 413;
         reject(error);
@@ -125,6 +170,11 @@ function readJson(req) {
     });
     req.on("error", reject);
   });
+}
+
+function declaredBodySize(req) {
+  const size = Number(req.headers["content-length"] || 0);
+  return Number.isFinite(size) ? size : 0;
 }
 
 function proxyRequest(req, res) {

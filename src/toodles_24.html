@@ -244,7 +244,7 @@ body::after {
 .mh-center { text-align: center; }
 .mh-center h1 {
   font-family: var(--display);
-  font-size: clamp(64px, 9vw, 108px);
+  font-size: clamp(84px, 12vw, 148px);
   line-height: 0.82;
   letter-spacing: 0.015em;
   color: var(--white);
@@ -361,7 +361,7 @@ body.locked .access-bar::before {
   content: 'TOODLES';
   display: block;
   font-family: var(--display);
-  font-size: clamp(58px, 14vw, 118px);
+  font-size: clamp(72px, 17vw, 150px);
   line-height: 0.78;
   letter-spacing: 0.04em;
   color: var(--yellow);
@@ -598,6 +598,24 @@ body.unlocked .access-bar {
   font-size: 20px; letter-spacing: 0.1em;
   color: var(--yellow);
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.section-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--yellow);
+  border-radius: 999px;
+  background: rgba(245,197,24,0.10);
+  color: var(--yellow);
+  font-family: var(--mono);
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 .col-label-sub {
   font-family: var(--mono);
@@ -683,6 +701,9 @@ textarea::placeholder, input::placeholder { color: var(--black6); font-style: it
   font-size: 42px; letter-spacing: 0.06em;
   line-height: 0.9;
   color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .output-title em {
   font-style: normal;
@@ -1099,11 +1120,11 @@ body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
 <!-- CHYRON — Fox News parody, black/yellow/orange palette -->
 <div class="chyron-stack" aria-hidden="true">
   <div class="chyron-top">
-    <div class="chyron-bug">FOR THE OFFICE</div>
+    <div class="chyron-bug">FIELD TO CLEAR</div>
     <div class="chyron-top-scroll">
       <span class="chyron-top-inner">
-        BUILT FOR PEOPLE WHO HAVE NEVER SEEN INSIDE A WALL <span class="sep">●</span> ALSO BUILT FOR THE ONES WHO HAVE <span class="sep">●</span> TURNS "IT WAS BAD" INTO SOMETHING MANAGEMENT CAN READ <span class="sep">●</span> KEEPS THE ORDER OF OPERATIONS STRAIGHT <span class="sep">●</span> EXPLAINS TIME WITHOUT SOUNDING DEFENSIVE <span class="sep">●</span> FIXES THE NOTE, NOT THE STORY <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
-        BUILT FOR PEOPLE WHO HAVE NEVER SEEN INSIDE A WALL <span class="sep">●</span> ALSO BUILT FOR THE ONES WHO HAVE <span class="sep">●</span> TURNS "IT WAS BAD" INTO SOMETHING MANAGEMENT CAN READ <span class="sep">●</span> KEEPS THE ORDER OF OPERATIONS STRAIGHT <span class="sep">●</span> EXPLAINS TIME WITHOUT SOUNDING DEFENSIVE <span class="sep">●</span> FIXES THE NOTE, NOT THE STORY <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
+        TRANSLATES FIELD WORK INTO NOTES PEOPLE CAN UNDERSTAND WITHOUT KNOWING WHAT WAS BEHIND THE WALL <span class="sep">●</span> KEEPS THE ORDER OF OPERATIONS STRAIGHT <span class="sep">●</span> EXPLAINS TIME WITHOUT SOUNDING DEFENSIVE <span class="sep">●</span> HELPS THE READER FOLLOW WHAT THE TECH FOUND <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
+        TRANSLATES FIELD WORK INTO NOTES PEOPLE CAN UNDERSTAND WITHOUT KNOWING WHAT WAS BEHIND THE WALL <span class="sep">●</span> KEEPS THE ORDER OF OPERATIONS STRAIGHT <span class="sep">●</span> EXPLAINS TIME WITHOUT SOUNDING DEFENSIVE <span class="sep">●</span> HELPS THE READER FOLLOW WHAT THE TECH FOUND <span class="sep">●</span> TOODLES HAS THE NOTE <span class="sep">●</span>
       </span>
     </div>
   </div>
@@ -1137,7 +1158,7 @@ body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
         <span class="shadow" aria-hidden="true">TOODLES</span>
         <span class="shadow2" aria-hidden="true">TOODLES</span>
       </h1>
-      <div class="mh-tagline">for people who are great with tools and terrible with keyboards</div>
+      <div class="mh-tagline">helps field work make sense to people who were not standing there</div>
     </div>
     <div class="mh-stat" style="text-align:right">
       <span class="mh-stat-num orange" id="noteCount">0</span>
@@ -1147,7 +1168,7 @@ body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
   <div class="mh-deck">
     <span class="mh-deck-item">She Doesn't Judge</span>
     <span class="mh-deck-item">She Just Writes It Down</span>
-    <span class="mh-deck-item">For People Who Have Seen The Wall</span>
+    <span class="mh-deck-item">For People Who Need The Wall Explained</span>
     <span class="mh-deck-item">Est. The Day You First Had To Write A Note In A Parking Lot</span>
   </div>
 </header>
@@ -1169,7 +1190,7 @@ body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
   <aside class="sidebar">
     <div class="sb-head">
       <div class="sb-title">THE PILE</div>
-      <div class="sb-sub">one bucket per work order. or per near-death experience. your call.</div>
+      <div class="sb-sub">start a job, dump the rough notes, keep it moving.</div>
       <button class="new-job-btn" onclick="addJob()">New Job</button>
     </div>
     <div class="job-list" id="jobList"></div>
@@ -1207,7 +1228,7 @@ body.fault .chyron-slug::after { border-left-color: var(--black4) !important; }
     <div class="input-zone">
       <!-- LEFT -->
       <div class="col">
-        <div class="col-label">THE COMPLAINT</div>
+        <div class="col-label"><span class="section-icon" aria-hidden="true">🙉</span>THE COMPLAINT</div>
         <div class="col-label-sub">raw, unfiltered, possibly unspellchecked</div>
 
         <div class="field">
@@ -1231,7 +1252,7 @@ it was worse than it looked. it always is."></textarea>
 
       <!-- RIGHT -->
       <div class="col">
-        <div class="col-label">THE TIME</div>
+        <div class="col-label"><span class="section-icon" aria-hidden="true">🙈</span>THE TIME</div>
         <div class="col-label-sub">what slowed it down, what still needs doing</div>
 
         <div class="field">
@@ -1264,7 +1285,7 @@ it was worse than it looked. it always is."></textarea>
     <div class="output">
       <div class="output-head">
         <div>
-          <div class="output-title">THE <em>NOTE</em></div>
+          <div class="output-title"><span class="section-icon" aria-hidden="true">🙊</span>THE <em>NOTE</em></div>
           <div class="output-sub" id="outputSub">waiting for your input · not judging · definitely not judging · okay maybe a little</div>
         </div>
         <div class="output-acts">
@@ -1359,8 +1380,8 @@ let _key = '';
 const history = [];
 
 const jobs = [
-  { id:1, name:'Unit 4B – HVAC Leak',     wo:'WO #2241', status:'draft', quip:'"the ceiling is doing something"' },
-  { id:2, name:'Commons – Door Closer',    wo:'WO #2238', status:'final', quip:'"it don\'t close right"' },
+  { id:1, name:'Unit 4B – HVAC Leak',     wo:'draft · today', status:'draft', quip:'"the ceiling is doing something"' },
+  { id:2, name:'Commons – Door Closer',    wo:'final · today', status:'final', quip:'"it don\'t close right"' },
 ];
 let nextId = 3;
 
@@ -1413,7 +1434,7 @@ function addJob() {
   const name = prompt('Job name — what do you call this one?');
   if (!name) return;
   const id = nextId++;
-  jobs.unshift({id, name, wo:'WO #'+(2240+id), status:'draft', quip:'freshly opened · toodles is watching'});
+  jobs.unshift({id, name, wo:'draft · today', status:'draft', quip:'freshly opened · toodles is watching'});
   selJob(jobs[0].id);
   renderJobs();
 }
