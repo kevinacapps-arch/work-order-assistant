@@ -8,8 +8,9 @@ The important design choice is that one job equals one packet. Daily batch proce
 
 1. Copy `.env.example` to `.env`.
 2. Add your `OPENAI_API_KEY`.
-3. Optional: set `APP_SHARED_SECRET` so Shortcuts can call your backend without exposing the OpenAI key.
-4. Start the server:
+3. Optional: set `APP_SHARED_SECRET` so Shortcuts and Toodles can call your backend without exposing the OpenAI key.
+4. Optional: set `ADMIN_SECRET` to enable the private `/admin` usage dashboard.
+5. Start the server:
 
 ```powershell
 npm start
@@ -31,6 +32,12 @@ Open the browser test page:
 
 ```text
 http://localhost:8787/test
+```
+
+Open the private usage dashboard:
+
+```text
+http://localhost:8787/admin
 ```
 
 ## Endpoints
@@ -117,6 +124,15 @@ Body:
   ]
 }
 ```
+
+### Admin Usage
+
+```http
+GET /api/admin/usage
+X-Admin-Secret: your-admin-secret
+```
+
+Returns daily token and estimated spend totals. `/api/draft`, `/api/refine`, and `/api/batch` record successful OpenAI usage and enforce `DAILY_SPEND_CAP_USD` before model calls. The default cap is `$1.00/day`.
 
 ## Shortcut Role
 

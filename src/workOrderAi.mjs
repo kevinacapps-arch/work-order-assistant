@@ -63,7 +63,7 @@ export async function refineWorkOrder(rawBody) {
   };
 }
 
-export async function batchDraft(rawPackets) {
+export async function batchDraft(rawPackets, hooks = {}) {
   if (!Array.isArray(rawPackets)) {
     const error = new Error("Batch request needs packets array.");
     error.statusCode = 400;
@@ -80,8 +80,12 @@ export async function batchDraft(rawPackets) {
   const results = [];
   for (const packet of rawPackets) {
     try {
-      results.push(await draftWorkOrder(packet));
+      if (hooks.beforeRequest) await hooks.beforeRequest(packet);
+      const result = await draftWorkOrder(packet);
+      if (hooks.afterResult) await hooks.afterResult(result, packet);
+      results.push(result);
     } catch (error) {
+      if (hooks.afterError) await hooks.afterError(error, packet);
       results.push({
         packetId: packet?.packetId || packet?.job_id || null,
         label: packet?.label || packet?.jobLabel || null,

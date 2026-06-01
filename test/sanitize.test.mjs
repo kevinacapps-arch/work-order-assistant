@@ -1,7 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import os from "node:os";
+import path from "node:path";
 import { appPageHtml } from "../src/appPage.mjs";
 import { buildPacket, dedupeLines, limitText, normalizeText } from "../src/sanitize.mjs";
+import { estimateUsd, recordAiUsage, usageDashboardData } from "../src/usageStore.mjs";
 import { batchDraft, extractOutputText } from "../src/workOrderAi.mjs";
 
 test("normalizeText cleans spacing and line endings", () => {
@@ -77,4 +80,42 @@ test("batch requests are capped before model calls", async () => {
     if (previous === undefined) delete process.env.MAX_BATCH_PACKETS;
     else process.env.MAX_BATCH_PACKETS = previous;
   }
+});
+
+test("usage cost estimation uses response token counts", () => {
+  const cost = estimateUsd(
+    { input_tokens: 1000, output_tokens: 500 },
+    {
+      inputCostPer1M: 2,
+      outputCostPer1M: 8,
+      unknownRequestCostUsd: 0.05
+    }
+  );
+
+  assert.equal(cost, 0.006);
+});
+
+test("usage dashboard summarizes daily spend from sqlite", async () => {
+  const config = {
+    dbPath: path.join(os.tmpdir(), `toodles-usage-${Date.now()}-${Math.random()}.sqlite`),
+    dailyCapUsd: 1,
+    inputCostPer1M: 2,
+    outputCostPer1M: 8,
+    unknownRequestCostUsd: 0.05
+  };
+
+  await recordAiUsage({
+    endpoint: "draft",
+    model: "test-model",
+    usage: { input_tokens: 1000, output_tokens: 500 },
+    status: "success"
+  }, config);
+
+  const summary = await usageDashboardData(config);
+
+  assert.equal(summary.today.requests, 1);
+  assert.equal(summary.today.inputTokens, 1000);
+  assert.equal(summary.today.outputTokens, 500);
+  assert.equal(summary.today.estimatedUsd, 0.006);
+  assert.equal(summary.today.remainingUsd, 0.994);
 });

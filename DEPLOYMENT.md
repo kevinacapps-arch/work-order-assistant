@@ -4,7 +4,7 @@ The iPad Shortcut cannot call `localhost` on your Mac once you leave the machine
 
 The simplest first deployment is a small web service on Render, Railway, or Fly.io. Render is the easiest manual setup for this project because it can run the Node service straight from a GitHub repo and gives you an HTTPS `onrender.com` URL.
 
-This repo includes `render.yaml`, so Render can read the service settings automatically. You still need to enter `OPENAI_API_KEY` and `APP_SHARED_SECRET` in Render because those should not be committed to git.
+This repo includes `render.yaml`, so Render can read the service settings automatically. You still need to enter `OPENAI_API_KEY`, `APP_SHARED_SECRET`, and `ADMIN_SECRET` in Render because those should not be committed to git.
 
 ## Recommended First Deploy: Render
 
@@ -28,6 +28,12 @@ Health Check Path: /health
 ```text
 OPENAI_API_KEY=your OpenAI API key
 APP_SHARED_SECRET=a private password for your Shortcut
+ADMIN_SECRET=a different private password for /admin
+DAILY_SPEND_CAP_USD=1.00
+USAGE_DB_PATH=/var/data/toodles-usage.sqlite
+OPENAI_INPUT_COST_PER_1M_TOKENS=1.25
+OPENAI_OUTPUT_COST_PER_1M_TOKENS=10.00
+USAGE_UNKNOWN_REQUEST_COST_USD=0.05
 OPENAI_MODEL=gpt-5.4-mini
 OPENAI_REASONING_EFFORT=low
 MAX_SOURCE_CHARS=12000
@@ -74,6 +80,14 @@ https://your-service-name.onrender.com/app
 ```
 
 It stores jobs in that browser's local storage and sends drafts/refinements to the same backend.
+
+The private usage dashboard is available at:
+
+```text
+https://your-service-name.onrender.com/admin
+```
+
+Use `ADMIN_SECRET`, not `APP_SHARED_SECRET`, to view token and estimated spend stats.
 
 8. In the iPad Shortcut, use this URL:
 

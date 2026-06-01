@@ -6,11 +6,27 @@ services:
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
+    disk:
+      name: toodles-usage
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: OPENAI_API_KEY
         sync: false
       - key: APP_SHARED_SECRET
         sync: false
+      - key: ADMIN_SECRET
+        sync: false
+      - key: DAILY_SPEND_CAP_USD
+        value: "1.00"
+      - key: USAGE_DB_PATH
+        value: /var/data/toodles-usage.sqlite
+      - key: OPENAI_INPUT_COST_PER_1M_TOKENS
+        value: "1.25"
+      - key: OPENAI_OUTPUT_COST_PER_1M_TOKENS
+        value: "10.00"
+      - key: USAGE_UNKNOWN_REQUEST_COST_USD
+        value: "0.05"
       - key: OPENAI_MODEL
         value: gpt-5.4-mini
       - key: OPENAI_REASONING_EFFORT
