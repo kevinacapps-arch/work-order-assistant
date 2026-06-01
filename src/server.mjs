@@ -16,6 +16,7 @@ const PROXY_TARGET = process.env.PROXY_TARGET || "";
 const RATE_LIMIT_WINDOW_MS = numberFromEnv(process.env.API_RATE_LIMIT_WINDOW_MS, 60_000);
 const RATE_LIMIT_MAX_REQUESTS = numberFromEnv(process.env.API_RATE_LIMIT_MAX_REQUESTS, 60);
 const MAX_BODY_BYTES = numberFromEnv(process.env.MAX_BODY_BYTES, 2_000_000);
+const BACKEND_VERSION = "usage-admin-2026-06-01";
 const rateBuckets = new Map();
 
 const server = http.createServer(async (req, res) => {
@@ -27,7 +28,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && path === "/health") {
-      return sendJson(res, 200, { ok: true, proxy: Boolean(PROXY_TARGET) });
+      return sendJson(res, 200, { ok: true, proxy: Boolean(PROXY_TARGET), version: BACKEND_VERSION });
     }
 
     if (req.method === "GET" && path === "/admin") {
