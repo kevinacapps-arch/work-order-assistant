@@ -31,10 +31,12 @@ Preferred style examples:
 Output format:
 - Format each output like a clean entry checklist for someone copying the information into another system.
 - Use these labels in this order: Opening, Address/Unit, Date/Visit, Area, Labor Total, Action/Result, Follow-up, Closing.
-- Opening should be one short sentence that identifies the entry purpose using provided facts, such as the address/unit or work order area.
+- Do not skip any label. Every note entry must include all eight labels, even when context is missing.
+- Opening is mandatory. It should be one short sentence that identifies the entry purpose using provided facts, such as the address/unit, work order area, or issue. If there is not enough context, write "Opening context not provided."
 - Address/Unit should be the most visually obvious line. Use the exact address, unit, property, or location wording provided.
 - Labor Total is mandatory for every note entry. If labor is provided, state the total clearly. If labor is missing, write "Labor total not provided".
-- If Address/Unit, Date/Visit, or Area is missing and the note would be unclear without it, write "Address/unit not provided", "Date not provided", or "Area not provided".
+- Date/Visit is mandatory for every note entry. If a visit date is provided anywhere in the packet, include it. If no visit date is provided, write "Date not provided".
+- If Address/Unit or Area is missing, write "Address/unit not provided" or "Area not provided".
 - Keep Action/Result as a cohesive paragraph in the actual order of events.
 - Closing should be one short sentence that states the final status or next step using only provided facts. If final status is unclear, write "Final status not provided."
 - For multiple notes or bulk input, separate each note with a blank line and repeat the same labels for each note.
