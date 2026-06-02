@@ -27,7 +27,12 @@ Preferred style examples:
 - Reattached loose siding.
 - Recommend HVAC vendor to evaluate venting.
 
-Return only the finished note. Do not add headings unless the user specifically provided multiple separate notes.`;
+Output format:
+- Use short labels when the facts are available: Date/Visit, Area, Labor, Summary, Follow-up.
+- If Date/Visit, Area, or Labor is missing and the note would be unclear without it, write "Date not provided", "Area not provided", or "Labor not provided".
+- Keep the Summary as a cohesive paragraph in the actual order of events.
+- For multiple notes or bulk input, separate each note with a blank line and repeat the same labels for each note.
+- Do not add extra commentary outside the finished note.`;
 
 export function packetToUserPrompt(packet) {
   return `WORK ORDER LABEL:
@@ -48,7 +53,7 @@ ${packet.laborNotes || "(none)"}
 FOLLOW-UP:
 ${packet.followUp || "(none)"}
 
-Write one AppFolio-ready maintenance work order summary. Keep related thoughts together.`;
+Write one AppFolio-ready maintenance work order summary using the required labeled format. Keep related thoughts together.`;
 }
 
 export function refinementPrompt(packet, currentNote, correction) {
@@ -77,5 +82,5 @@ ${currentNote || "(none)"}
 USER CORRECTION:
 ${correction || "(none)"}
 
-Revise the current note using the correction. Keep the same field foreman voice, use only supported facts, and return only the revised note.`;
+Revise the current note using the correction. Keep the same field foreman voice, use only supported facts, preserve the labeled format when useful, and return only the revised note.`;
 }
