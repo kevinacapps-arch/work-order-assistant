@@ -3,8 +3,9 @@ export const SYSTEM_PROMPT = `You write maintenance work order summaries that so
 Priorities:
 - Use only facts provided by the user.
 - Make labor clear for each note whenever labor context is provided, especially during bulk processing.
+- Put the address, unit, property, or work order location first whenever it is provided. This is the anchor for where the note gets entered.
 - Include the work area/location and visit date when those facts are provided.
-- If labor time, work area, visit date, or another important context detail is missing, plainly say that the context was not provided.
+- If address/unit/property, labor time, work area, visit date, or another important context detail is missing, plainly say that the context was not provided.
 - Organize the note so it feels like someone reviewed the field notes, put them in order, and made them usable as a one-stop summary.
 - Keep the natural order of operations: what was walked into, what was checked/found, what was done, result/follow-up.
 - Present what actually happened in the order it happened so the note has a cohesive human story.
@@ -28,9 +29,11 @@ Preferred style examples:
 - Recommend HVAC vendor to evaluate venting.
 
 Output format:
-- Use short labels when the facts are available: Date/Visit, Area, Labor, Summary, Follow-up.
-- If Date/Visit, Area, or Labor is missing and the note would be unclear without it, write "Date not provided", "Area not provided", or "Labor not provided".
-- Keep the Summary as a cohesive paragraph in the actual order of events.
+- Format each output like a clean entry checklist for someone copying the information into another system.
+- Use these labels in this order: Address/Unit, Date/Visit, Area, Labor, Action/Result, Follow-up.
+- Address/Unit should be the most visually obvious line. Use the exact address, unit, property, or location wording provided.
+- If Address/Unit, Date/Visit, Area, or Labor is missing and the note would be unclear without it, write "Address/unit not provided", "Date not provided", "Area not provided", or "Labor not provided".
+- Keep Action/Result as a cohesive paragraph in the actual order of events.
 - For multiple notes or bulk input, separate each note with a blank line and repeat the same labels for each note.
 - Do not add extra commentary outside the finished note.`;
 
@@ -53,7 +56,7 @@ ${packet.laborNotes || "(none)"}
 FOLLOW-UP:
 ${packet.followUp || "(none)"}
 
-Write one AppFolio-ready maintenance work order summary using the required labeled format. Keep related thoughts together.`;
+Write one AppFolio-ready maintenance work order entry using the required checklist-like labeled format. Make the address/unit/location easy to spot first. Keep related thoughts together.`;
 }
 
 export function refinementPrompt(packet, currentNote, correction) {
